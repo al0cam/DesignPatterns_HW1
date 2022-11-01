@@ -12,7 +12,7 @@ import FileType.FileType;
 
 public class CSVReaderFactory {
     
-    public List<Object> readFromCSV(String path)
+    public FileType readFromCSV(String path)
     {
         FileType fileType = null;
         List<String[]> fileContent = null;
@@ -35,21 +35,21 @@ public class CSVReaderFactory {
 			}
 
             if(isBrodFile(fileContent.get(0)))
-                fileType = new BrodFile();
+                fileType = new BrodFile(fileContent);
             else if(isLukaFile(fileContent.get(0)))
-                fileType = new BrodFile();
+                fileType = new BrodFile(fileContent);
             else if(isRasporedFile(fileContent.get(0)))
-                fileType = new BrodFile();
+                fileType = new BrodFile(fileContent);
             else if(isVezFile(fileContent.get(0)))
-                fileType = new BrodFile();   
+                fileType = new BrodFile(fileContent);   
             else if(isZahtjevRezervacijeFile(fileContent.get(0)))
-                fileType = new BrodFile();
+                fileType = new BrodFile(fileContent);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
         System.out.println("DEWIT");
-        return fileType.convertToObjects(fileContent);
+        return fileType;
     }
 
 
