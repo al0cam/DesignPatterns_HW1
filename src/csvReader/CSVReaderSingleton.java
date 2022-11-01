@@ -3,7 +3,7 @@ package csvReader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CSVReaderSingleton {
@@ -24,29 +24,31 @@ public class CSVReaderSingleton {
 		return csvReaderSingleton;
 	}
 
-	public List<String> readFromCSV(String path)
+	public List<String[]> readFromCSV(String path)
 	{
-		
-		System.out.println(System.getProperty("user.dir"));
-		try(BufferedReader fileReader = new BufferedReader(new FileReader(path)))
-		{
-		String line = "";
+		List<String[]> fileContent = null;
+		try(
+			BufferedReader fileReader = new BufferedReader(new FileReader(path))
+		){
+			String line = "";
+			fileContent = new ArrayList<>();
 
-		//Read the file line by line
-		while ((line = fileReader.readLine()) != null)
-		{
-			//Get all tokens available in line
-			String[] tokens = line.split(",");
+			while ((line = fileReader.readLine()) != null)
+			{
+				String[] tokens = line.split(";");
+				fileContent.add(tokens);
 
-			//Verify tokens
-			System.out.println(Arrays.toString(tokens));
-		}
+				// print of read lines in format
+				// for (String string : tokens) {
+					
+				// 	System.out.print(String.format("%15s\t",string));
+				// }
+				// System.out.println();
+			}
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		
-		return null;
+		return fileContent;
 	}
 }
