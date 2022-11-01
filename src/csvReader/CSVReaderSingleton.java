@@ -35,6 +35,7 @@ public class CSVReaderSingleton {
 
 			while ((line = fileReader.readLine()) != null)
 			{
+				line = line.replace(",", ".");
 				String[] tokens = line.split(";");
 				fileContent.add(tokens);
 

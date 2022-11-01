@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import FileType.BrodFile;
@@ -14,7 +15,6 @@ public class CSVReaderFactory {
     public List<Object> readFromCSV(String path)
     {
         FileType fileType = null;
-        List<Object> objects = null;
         List<String[]> fileContent = null;
 		try(
 			BufferedReader fileReader = new BufferedReader(new FileReader(path))
@@ -24,24 +24,34 @@ public class CSVReaderFactory {
             boolean addToList = true;
 			while ((line = fileReader.readLine()) != null)
 			{
+                addToList = true;
+				line = line.replace(",", ".");
 				String[] tokens = line.split(";");
-                for (String[] string : fileContent) {
-                    if(string == null)
+                for (String string : tokens) 
+                    if(string == null || string.equals(""))
                         addToList = false;
-                }
                 if(addToList)
 				    fileContent.add(tokens);
 			}
 
             if(isBrodFile(fileContent.get(0)))
                 fileType = new BrodFile();
-
+            else if(isLukaFile(fileContent.get(0)))
+                fileType = new BrodFile();
+            else if(isRasporedFile(fileContent.get(0)))
+                fileType = new BrodFile();
+            else if(isVezFile(fileContent.get(0)))
+                fileType = new BrodFile();   
+            else if(isZahtjevRezervacijeFile(fileContent.get(0)))
+                fileType = new BrodFile();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-        return objects;
+        System.out.println("DEWIT");
+        return fileType.convertToObjects(fileContent);
     }
+
 
 
     private boolean isBrodFile(String[] firstRow)
@@ -71,8 +81,20 @@ public class CSVReaderFactory {
 
     private boolean splitAndCompare(String[] firstRow, String idRow)
     {
+        boolean equal = true;
         String[] idRowSplit = idRow.split(";");
-        return firstRow.equals(idRowSplit);
+        if(firstRow.length != idRowSplit.length)
+        {
+            equal = false;
+        }
+        else
+        {
+            for (int i=0; i<firstRow.length;i++) {
+                if(!firstRow[i].equals(idRowSplit[i]))
+                    equal = false;
+            }
+        }
+        return equal;
     }
 }
  
