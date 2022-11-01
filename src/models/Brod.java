@@ -13,6 +13,24 @@ public class Brod {
     private Float kapacitetOsobnihVozila;
     private Float kapacitetTereta;
     
+    public Brod() {
+    }
+
+    public Brod(Integer id, String oznakaBroda, String naziv, String tip, Float duljina, Float sirina, Float gaz,
+    Float maksimalnaBrzina, Float kapacitetPutnika, Float kapacitetOsobnihVozila, Float kapacitetTereta) {
+        this.id = id;
+        this.oznakaBroda = oznakaBroda;
+        this.naziv = naziv;
+        this.tip = tip;
+        this.duljina = duljina;
+        this.sirina = sirina;
+        this.gaz = gaz;
+        this.maksimalnaBrzina = maksimalnaBrzina;
+        this.kapacitetPutnika = kapacitetPutnika;
+        this.kapacitetOsobnihVozila = kapacitetOsobnihVozila;
+        this.kapacitetTereta = kapacitetTereta;
+    }
+
     public Integer getId() {
         return id;
     }

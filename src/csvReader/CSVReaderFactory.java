@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import FileType.BrodFile;
@@ -12,7 +11,7 @@ import FileType.FileType;
 
 public class CSVReaderFactory {
     
-    public FileType readFromCSV(String path)
+    public <T> List<T> readFromCSV(String path)
     {
         FileType fileType = null;
         List<String[]> fileContent = null;
@@ -49,7 +48,7 @@ public class CSVReaderFactory {
 			e.printStackTrace();
 		}
         System.out.println("DEWIT");
-        return fileType;
+        return fileType.getList();
     }
 
 
