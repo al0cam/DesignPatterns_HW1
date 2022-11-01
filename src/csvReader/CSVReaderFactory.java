@@ -8,6 +8,10 @@ import java.util.List;
 
 import FileType.BrodFile;
 import FileType.FileType;
+import FileType.LukaFile;
+import FileType.RasporedFile;
+import FileType.VezFile;
+import FileType.ZahtjevRezervacijeFile;
 
 public class CSVReaderFactory {
     
@@ -21,6 +25,7 @@ public class CSVReaderFactory {
 			String line = "";
 			fileContent = new ArrayList<>();
             boolean addToList = true;
+            String[] firstLine = fileReader.readLine().split(";");
 			while ((line = fileReader.readLine()) != null)
 			{
                 addToList = true;
@@ -29,20 +34,20 @@ public class CSVReaderFactory {
                 for (String string : tokens) 
                     if(string == null || string.equals(""))
                         addToList = false;
-                if(addToList)
+                if(addToList && tokens.length == firstLine.length)
 				    fileContent.add(tokens);
 			}
 
-            if(isBrodFile(fileContent.get(0)))
+            if(isBrodFile(firstLine))
                 fileType = new BrodFile(fileContent);
-            else if(isLukaFile(fileContent.get(0)))
-                fileType = new BrodFile(fileContent);
-            else if(isRasporedFile(fileContent.get(0)))
-                fileType = new BrodFile(fileContent);
-            else if(isVezFile(fileContent.get(0)))
-                fileType = new BrodFile(fileContent);   
-            else if(isZahtjevRezervacijeFile(fileContent.get(0)))
-                fileType = new BrodFile(fileContent);
+            else if(isLukaFile(firstLine))
+                fileType = new LukaFile(fileContent);
+            else if(isRasporedFile(firstLine))
+                fileType = new RasporedFile(fileContent);
+            else if(isVezFile(firstLine))
+                fileType = new VezFile(fileContent);   
+            else if(isZahtjevRezervacijeFile(firstLine))
+                fileType = new ZahtjevRezervacijeFile(fileContent);
 		}
 		catch (IOException e) {
 			e.printStackTrace();

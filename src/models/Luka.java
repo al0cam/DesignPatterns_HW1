@@ -12,6 +12,17 @@ public class Luka {
     private Integer ukBrOstalihhVezova;
     private LocalDateTime virtualnoVrijeme;
     
+    public Luka(String naziv, Float gpsSirina, Float gpsVisina, Float dubinaLuke, Integer ukBrPutnickihVezova,
+            Integer ukBrPoslovnihVezova, Integer ukBrOstalihhVezova, LocalDateTime virtualnoVrijeme) {
+        this.naziv = naziv;
+        this.gpsSirina = gpsSirina;
+        this.gpsVisina = gpsVisina;
+        this.dubinaLuke = dubinaLuke;
+        this.ukBrPutnickihVezova = ukBrPutnickihVezova;
+        this.ukBrPoslovnihVezova = ukBrPoslovnihVezova;
+        this.ukBrOstalihhVezova = ukBrOstalihhVezova;
+        this.virtualnoVrijeme = virtualnoVrijeme;
+    }
     public String getNaziv() {
         return naziv;
     }

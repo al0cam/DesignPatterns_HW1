@@ -13,28 +13,20 @@ public class VezFile extends FileType {
         List<Vez> listOfObjects = new ArrayList<Vez>();
         for (String[] line : fileContent) {
             System.out.println(Arrays.toString(line)); 
-            Vez b = new Vez();
-            b.setNaziv(line[2]);
+            Vez b = new Vez(
+                Integer.parseInt(line[0]),
+                line[1],
+                line[2],
+                Integer.parseInt(line[3]),
+                Integer.parseInt(line[4]),
+                Integer.parseInt(line[5]),
+                Integer.parseInt(line[6])
+            );
             listOfObjects.add(b);
         }
         list = listOfObjects;
     }
 
-
-    // @Override
-    // public FileType getFileType(List<String[]> fileContent) {
-    //     VezFile VezFile = new VezFile();
-    //     List<Vez> listOfObjects = new ArrayList<Vez>();
-    //     for (String[] line : fileContent) {
-    //         System.out.println(Arrays.toString(line)); 
-    //         Vez b = new Vez();
-    //         listOfObjects.add(b);
-    //     }
-    //     VezFile.list = listOfObjects;
-    //     return VezFile;
-    // }
-
-    
     public List<Vez> getList()
     {
         return list;

@@ -9,6 +9,17 @@ public class Vez {
     private Integer maksimalnaSirina;
     private Integer maksimalnaDubina;
 
+    public Vez(Integer id, String oznaka, String vrsta, Integer cijenaVezaPoSatu, Integer maksimalnaDuljina,
+            Integer maksimalnaSirina, Integer maksimalnaDubina) {
+        this.id = id;
+        this.oznaka = oznaka;
+        this.vrsta = vrsta;
+        this.cijenaVezaPoSatu = cijenaVezaPoSatu;
+        this.maksimalnaDuljina = maksimalnaDuljina;
+        this.maksimalnaSirina = maksimalnaSirina;
+        this.maksimalnaDubina = maksimalnaDubina;
+    }
+    
     public Integer getId() {
         return id;
     }

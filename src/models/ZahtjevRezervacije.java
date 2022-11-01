@@ -7,6 +7,11 @@ public class ZahtjevRezervacije {
     private LocalDateTime datumVrijemeOd;
     private Integer trajanjePrivezaUSatima;
     
+    public ZahtjevRezervacije(Integer idBrod, LocalDateTime datumVrijemeOd, Integer trajanjePrivezaUSatima) {
+        this.idBrod = idBrod;
+        this.datumVrijemeOd = datumVrijemeOd;
+        this.trajanjePrivezaUSatima = trajanjePrivezaUSatima;
+    }
     public Integer getIdBrod() {
         return idBrod;
     }

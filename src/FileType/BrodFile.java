@@ -13,24 +13,26 @@ public class BrodFile extends FileType {
         List<Brod> listOfObjects = new ArrayList<Brod>();
         for (String[] line : fileContent) {
             System.out.println(Arrays.toString(line)); 
-            Brod b = new Brod(
-                Integer.parseInt(line[0]),
-                line[1],
-                line[2],
-                line[3],
-                Float.parseFloat(line[4]),
-                Float.parseFloat(line[5]),
-                Float.parseFloat(line[6]),
-                Float.parseFloat(line[7]),
-                Float.parseFloat(line[8]),
-                Float.parseFloat(line[9]),
-                Float.parseFloat(line[10])
-            );
-            listOfObjects.add(b);
+            try {
+                Brod b = new Brod(
+                    Integer.parseInt(line[0]),
+                    line[1],
+                    line[2],
+                    line[3],
+                    Float.parseFloat(line[4]),
+                    Float.parseFloat(line[5]),
+                    Float.parseFloat(line[6]),
+                    Float.parseFloat(line[7]),
+                    Float.parseFloat(line[8]),
+                    Float.parseFloat(line[9]),
+                    Float.parseFloat(line[10])
+                );
+                listOfObjects.add(b);
+            } catch (Exception e) {
+            }
         }
         list = listOfObjects;
     }
-
 
     // @Override
     // public FileType getFileType(List<String[]> fileContent) {
@@ -44,7 +46,6 @@ public class BrodFile extends FileType {
     //     brodFile.list = listOfObjects;
     //     return brodFile;
     // }
-
     
     public List<Brod> getList()
     {

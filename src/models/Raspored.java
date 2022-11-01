@@ -1,14 +1,23 @@
 package models;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public class Raspored {
     private Integer idVez;
     private Integer idBrod;
     private List<Integer> daniUtjednu;
-    private Integer vrijemeOd;
-    private Integer vrijemeDo;
+    private LocalTime vrijemeOd;
+    private LocalTime vrijemeDo;
     
+    public Raspored(Integer idVez, Integer idBrod, List<Integer> daniUtjednu, LocalTime vrijemeOd,
+            LocalTime vrijemeDo) {
+        this.idVez = idVez;
+        this.idBrod = idBrod;
+        this.daniUtjednu = daniUtjednu;
+        this.vrijemeOd = vrijemeOd;
+        this.vrijemeDo = vrijemeDo;
+    }
     public Integer getIdVez() {
         return idVez;
     }
@@ -27,17 +36,17 @@ public class Raspored {
     public void setDaniUtjednu(List<Integer> daniUtjednu) {
         this.daniUtjednu = daniUtjednu;
     }
-    public Integer getVrijemeOd() {
+    public LocalTime getVrijemeOd() {
         return vrijemeOd;
     }
-    public void setVrijemeOd(Integer vrijemeOd) {
+    public void setVrijemeOd(LocalTime vrijemeOd) {
         this.vrijemeOd = vrijemeOd;
     }
-    public Integer getVrijemeDo() {
+    public LocalTime getVrijemeDo() {
         return vrijemeDo;
     }
-    public void setVrijemeDo(Integer vrijemeDo) {
+    public void setVrijemeDo(LocalTime vrijemeDo) {
         this.vrijemeDo = vrijemeDo;
     }
-
+    
 }
