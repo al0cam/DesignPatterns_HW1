@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;
 import store.StoreSingleton;
 import virtualTime.VirtualTimeSingleton;
@@ -59,7 +60,7 @@ public class CLISingleton {
         switch(command.group("bigGroup").split(" ")[0])
         {
             case "I":{
-
+                
             }
             break;
 
@@ -73,6 +74,7 @@ public class CLISingleton {
             break;
 
             case "UR":{
+		        ucitajDatoteku(command.group("nazivDatoteke"));
             }
             break;
             
@@ -93,7 +95,7 @@ public class CLISingleton {
 
     private void statusVezova()
     {
-        
+       
     }
 
     private void postaviVirtualnoVrijeme(String vrijemeIDatum)
@@ -102,6 +104,17 @@ public class CLISingleton {
             LocalDateTime.parse(vrijemeIDatum, DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss"))
         );
         System.out.println("Virtual time set; new virtual time: "+ VirtualTimeSingleton.getInstance().virtualTimeToString());
+    }
+
+    private void ucitajDatoteku(String naziv)
+    {
+        CSVReaderFactory csvReaderFactory = new CSVReaderFactory();
+
+        try {
+            StoreSingleton.getInstance().zahtjeviRezervacija = csvReaderFactory.readFromCSV(naziv);
+        } catch (Exception e) {
+            ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+        }
     }
 
 

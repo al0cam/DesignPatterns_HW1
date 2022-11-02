@@ -21,12 +21,9 @@ public class Main {
 			}
 		}
 
-		StoreSingleton.getInstance().setBrodovi(csvReaderFactory.readFromCSV("./src/CSV/DZ_1_brod.csv"));
-		StoreSingleton.getInstance().setLuke(csvReaderFactory.readFromCSV("./src/CSV/DZ_1_luka.csv"));
-		StoreSingleton.getInstance().setVezovi(csvReaderFactory.readFromCSV("./src/CSV/DZ_1_vez.csv"));
-
-		// ne ucitava se pri pokretanju
-		// StoreSingleton.getInstance().zahtjeviRezervacija = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_zahtjev_rezervacije.csv");
+		StoreSingleton.getInstance().setBrodovi(csvReaderFactory.readFromCSV("DZ_1_brod.csv"));
+		StoreSingleton.getInstance().setLuke(csvReaderFactory.readFromCSV("DZ_1_luka.csv"));
+		StoreSingleton.getInstance().setVezovi(csvReaderFactory.readFromCSV("DZ_1_vez.csv"));
 
 		CLISingleton.getInstance().commandInterpreter();
 	}
