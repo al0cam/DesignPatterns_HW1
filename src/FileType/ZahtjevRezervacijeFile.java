@@ -26,7 +26,7 @@ public class ZahtjevRezervacijeFile extends FileType {
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().increaseErrorCount();
+                ErrorCatcherSingleton.getInstance().increaseErrorCount(line,e);
             }
         }
         list = listOfObjects;

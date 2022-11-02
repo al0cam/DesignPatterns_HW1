@@ -28,11 +28,11 @@ public class LukaFile extends FileType {
                     Integer.parseInt(line[4]),
                     Integer.parseInt(line[5]),
                     Integer.parseInt(line[6]),
-                    LocalDateTime.parse(line[7].trim(),DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
+                    LocalDateTime.parse(line[7].trim(),DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss"))
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().increaseErrorCount();;
+                ErrorCatcherSingleton.getInstance().increaseErrorCount(line,e);
             }
         }
         list = listOfObjects;
