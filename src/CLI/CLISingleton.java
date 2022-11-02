@@ -26,13 +26,14 @@ public class CLISingleton {
     public void commandInterpreter()
     {
         Pattern pattern = Pattern.compile(
-            "(?<bigGroup>(?<I>I$)|"+
-            "(?<VR>VR [0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9]$)|"+
-            "(?<V>V [A-Z]{2} [A-Z] [0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9] [0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9]$)|"+
-            "(?<UR>UR \\w+\\.csv$)|"+
-            "(?<ZD>ZD \\d+$)|"+
-            "(?<ZP>ZP \\d+ \\d+$)|"+
-            "(?<Q>Q$))");
+            "(?<bigGroup>(I$)|"+
+            "(VR (?<datumIVrijeme>[0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
+            "(V (?<vrstaVeza>[A-Z]{2}) (?<status>[A-Z]) (?<datumVrijemeOd>[0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9]) (?<datumVrijemeDo>[0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
+            "(UR (?<nazivDatoteke>\\w+\\.csv)$)|"+
+            "(ZD (?<idBrodZD>\\d+)$)|"+
+            "(ZP (?<idBrodZP>\\d+) (?<trajanjeUSatima>\\d+)$)|"+
+            "(Q$))"
+            );
 
         boolean work = true;
         while(work)
@@ -42,9 +43,8 @@ public class CLISingleton {
             Matcher matcher = pattern.matcher(command);
 
             if (matcher.matches()) {
-                System.out.println(matcher.group("bigGroup"));
                 VirtualTimeSingleton.getInstance().passTime();
-                System.out.println(VirtualTimeSingleton.getInstance().getVirtualtime().toString());
+                System.out.println("Virtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString());
                 work = executeCommand(matcher);
             } 
             else {
@@ -101,7 +101,7 @@ public class CLISingleton {
         VirtualTimeSingleton.getInstance().setVirtualtime(
             LocalDateTime.parse(vrijemeIDatum, DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss"))
         );
-        System.out.println("Virtual time set; new virtual time: "+ VirtualTimeSingleton.getInstance().getVirtualtime().toString());
+        System.out.println("Virtual time set; new virtual time: "+ VirtualTimeSingleton.getInstance().virtualTimeToString());
     }
 
 

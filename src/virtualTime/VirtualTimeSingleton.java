@@ -1,11 +1,12 @@
 package virtualTime;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class VirtualTimeSingleton {
-    private static VirtualTimeSingleton virtualTime;
-	private LocalDateTime virtualtime;
+    private static VirtualTimeSingleton virtualTimeSingleton;
+	private LocalDateTime virtualTime;
 	private LocalDateTime realTimeSinceLastChange;
 
 
@@ -15,27 +16,33 @@ public class VirtualTimeSingleton {
 	
 	public static VirtualTimeSingleton getInstance()
 	{
-		if (virtualTime == null)
+		if (virtualTimeSingleton == null)
 		{
-			virtualTime = new VirtualTimeSingleton();
+			virtualTimeSingleton = new VirtualTimeSingleton();
 		}
-		return virtualTime;
+		return virtualTimeSingleton;
 	}
 
 	public void passTime()
 	{
 		LocalDateTime newRealTime = LocalDateTime.now();
 		long gapInSeconds = ChronoUnit.SECONDS.between(realTimeSinceLastChange,newRealTime);
-		virtualtime.plusSeconds(gapInSeconds);
+		virtualTime = virtualTime.plusSeconds(gapInSeconds);
+	}
+
+	public String virtualTimeToString()
+	{
+		return DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss").
+			format(VirtualTimeSingleton.getInstance().getVirtualtime());
 	}
 
 	public LocalDateTime getVirtualtime() {
-		return virtualtime;
+		return virtualTime;
 	}
 
 	public void setVirtualtime(LocalDateTime virtualtime) {
 		realTimeSinceLastChange = LocalDateTime.now();
-		this.virtualtime = virtualtime;
+		this.virtualTime = virtualtime;
 	}
 
 }
