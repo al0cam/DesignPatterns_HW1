@@ -1,7 +1,9 @@
 package main;
 
 import java.util.List;
+import java.util.Scanner;
 
+import CLI.CLISingleton;
 import csvReader.CSVReaderFactory;
 import models.Brod;
 import models.Luka;
@@ -12,6 +14,13 @@ import models.ZahtjevRezervacije;
 public class Main {
 
 	public static void main(String[] args) {
+
+		// if (args.length <= 4) {
+		// 	System.out.println("ERROR nedovoljan broj argumenata!");
+		// 	return;
+		// }
+		// String kulString = String.join(" ", args);
+
 		// CSVReaderSingleton.getInstance().readFromCSV("./src/CSV/DZ_1_brod.csv");
 
 		int i = 0;
@@ -57,8 +66,8 @@ public class Main {
 		}
 		System.out.println("zahtjevi: "+ i);
 		i=0;
-		
 
+		CLISingleton.getInstance().commandInterpreter();
 	}
 
 }
