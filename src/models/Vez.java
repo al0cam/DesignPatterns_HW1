@@ -7,10 +7,10 @@ public class Vez {
     private Integer cijenaVezaPoSatu;
     private Integer maksimalnaDuljina;
     private Integer maksimalnaSirina;
-    private Integer maksimalnaDubina;
-
+    private Float maksimalnaDubina;
+    
     public Vez(Integer id, String oznaka, String vrsta, Integer cijenaVezaPoSatu, Integer maksimalnaDuljina,
-            Integer maksimalnaSirina, Integer maksimalnaDubina) {
+            Integer maksimalnaSirina, Float maksimalnaDubina) {
         this.id = id;
         this.oznaka = oznaka;
         this.vrsta = vrsta;
@@ -19,7 +19,6 @@ public class Vez {
         this.maksimalnaSirina = maksimalnaSirina;
         this.maksimalnaDubina = maksimalnaDubina;
     }
-    
     public Integer getId() {
         return id;
     }
@@ -56,10 +55,11 @@ public class Vez {
     public void setMaksimalnaSirina(Integer maksimalnaSirina) {
         this.maksimalnaSirina = maksimalnaSirina;
     }
-    public Integer getMaksimalnaDubina() {
+    public Float getMaksimalnaDubina() {
         return maksimalnaDubina;
     }
-    public void setMaksimalnaDubina(Integer maksimalnaDubina) {
+    public void setMaksimalnaDubina(Float maksimalnaDubina) {
         this.maksimalnaDubina = maksimalnaDubina;
     }
+
 }

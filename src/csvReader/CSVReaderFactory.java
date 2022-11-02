@@ -50,9 +50,8 @@ public class CSVReaderFactory {
                 fileType = new ZahtjevRezervacijeFile(fileContent);
 		}
 		catch (IOException e) {
-			e.printStackTrace();
-		}
-        System.out.println("DEWIT");
+            // TODO: write error
+        }
         return fileType.getList();
     }
 

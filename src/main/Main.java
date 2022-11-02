@@ -27,7 +27,7 @@ public class Main {
 		
 		List<Luka> luke = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_luka.csv");
 		for (Luka brod : luke) {
-			System.out.println(brod.getNaziv());
+			// System.out.println(brod.getNaziv());
 			i++;
 		}
 		System.out.println("luke: "+ i);
@@ -35,7 +35,8 @@ public class Main {
 		
 		List<Raspored> rasporedi = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_raspored.csv");
 		for (Raspored brod : rasporedi) {
-			System.out.println(brod.getDaniUtjednu());
+			e.printStackTrace();
+			// System.out.println(brod.getDaniUtjednu());
 			i++;
 		}
 		System.out.println("rasporedi: "+ i);
@@ -43,7 +44,7 @@ public class Main {
 		
 		List<Vez> vezovi = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_vez.csv");
 		for (Vez brod : vezovi) {
-			System.out.println(brod.getOznaka());
+			// System.out.println(brod.getOznaka());
 			i++;
 		}
 		System.out.println("vezovi: "+ i);
@@ -52,7 +53,7 @@ public class Main {
 
 		List<ZahtjevRezervacije> zahtjeviRezervacija = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_zahtjev_rezervacije.csv");
 		for (ZahtjevRezervacije brod : zahtjeviRezervacija) {
-			System.out.println(brod.getIdBrod());
+			// System.out.println(brod.getIdBrod());
 			i++;
 		}
 		System.out.println("zahtjevi: "+ i);

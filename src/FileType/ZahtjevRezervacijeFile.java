@@ -1,6 +1,7 @@
 package FileType;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,13 +14,19 @@ public class ZahtjevRezervacijeFile extends FileType {
     public ZahtjevRezervacijeFile(List<String[]> fileContent) {
         List<ZahtjevRezervacije> listOfObjects = new ArrayList<ZahtjevRezervacije>();
         for (String[] line : fileContent) {
-            System.out.println(Arrays.toString(line)); 
-            ZahtjevRezervacije b = new ZahtjevRezervacije(
-                Integer.parseInt(line[0]),
-                LocalDateTime.parse(line[1]),
-                Integer.parseInt(line[2])
-            );
-            listOfObjects.add(b);
+            // System.out.println(Arrays.toString(line)); 
+           
+
+            try {
+                ZahtjevRezervacije b = new ZahtjevRezervacije(
+                    Integer.parseInt(line[0]),
+                    LocalDateTime.parse(line[1],DateTimeFormatter.ofPattern("dd.MM.yyyy. H:mm:ss")),
+                    Integer.parseInt(line[2])
+                );
+                listOfObjects.add(b);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
         }
         list = listOfObjects;
     }
