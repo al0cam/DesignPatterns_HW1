@@ -1,71 +1,35 @@
 package main;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.Arrays;
 
 import CLI.CLISingleton;
+import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;
-import models.Brod;
-import models.Luka;
-import models.Raspored;
-import models.Vez;
-import models.ZahtjevRezervacije;
+import store.StoreSingleton;
 
 public class Main {
 
 	public static void main(String[] args) {
-
-		// if (args.length <= 4) {
-		// 	System.out.println("ERROR nedovoljan broj argumenata!");
-		// 	return;
-		// }
-		// String kulString = String.join(" ", args);
-
-		// CSVReaderSingleton.getInstance().readFromCSV("./src/CSV/DZ_1_brod.csv");
-
-		int i = 0;
+		System.out.println(args.length);
+		System.out.println(Arrays.toString(args));
 
 		CSVReaderFactory csvReaderFactory = new CSVReaderFactory();
-		List<Brod> brodovi = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_brod.csv");
-		for (Brod brod : brodovi) {
-			// System.out.println(brod.getNaziv());
-			i++;
-		}
-		System.out.println("BRODOVI: "+ i);
-		i=0;
-		
-		List<Luka> luke = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_luka.csv");
-		for (Luka brod : luke) {
-			// System.out.println(brod.getNaziv());
-			i++;
-		}
-		System.out.println("luke: "+ i);
-		i=0;
-		
-		List<Raspored> rasporedi = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_raspored.csv");
-		for (Raspored brod : rasporedi) {
-			// System.out.println(brod.getDaniUtjednu());
-			i++;
-		}
-		System.out.println("rasporedi: "+ i);
-		i=0;
-		
-		List<Vez> vezovi = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_vez.csv");
-		for (Vez brod : vezovi) {
-			// System.out.println(brod.getOznaka());
-			i++;
-		}
-		System.out.println("vezovi: "+ i);
-		i=0;
-		
 
-		List<ZahtjevRezervacije> zahtjeviRezervacija = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_zahtjev_rezervacije.csv");
-		for (ZahtjevRezervacije brod : zahtjeviRezervacija) {
-			// System.out.println(brod.getIdBrod());
-			i++;
+		if(args.length == 1 && args[0].contains(".csv"))
+		{
+			try {
+				StoreSingleton.getInstance().rasporedi = csvReaderFactory.readFromCSV(args[0]);
+			} catch (Exception e) {
+				ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+			}
 		}
-		System.out.println("zahtjevi: "+ i);
-		i=0;
+
+		StoreSingleton.getInstance().setBrodovi(csvReaderFactory.readFromCSV("./src/CSV/DZ_1_brod.csv"));
+		StoreSingleton.getInstance().setLuke(csvReaderFactory.readFromCSV("./src/CSV/DZ_1_luka.csv"));
+		StoreSingleton.getInstance().setVezovi(csvReaderFactory.readFromCSV("./src/CSV/DZ_1_vez.csv"));
+
+		// ne ucitava se pri pokretanju
+		// StoreSingleton.getInstance().zahtjeviRezervacija = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_zahtjev_rezervacije.csv");
 
 		CLISingleton.getInstance().commandInterpreter();
 	}

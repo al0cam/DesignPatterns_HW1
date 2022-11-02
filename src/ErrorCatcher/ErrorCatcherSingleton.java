@@ -17,10 +17,16 @@ public class ErrorCatcherSingleton {
 		return errorCatcher;
 	}
 
-	public void increaseErrorCount( String[] line, Exception e)
+	public void increaseErrorCountForLine( String[] line, Exception e)
 	{
 		errorCount++;
 		System.out.println("Error count: " + errorCount + " Line: "+Arrays.toString(line)+" Cause: "+e.getMessage());
+	}
+
+	public void increaseErrorCountForGeneralError(Exception e)
+	{
+		errorCount++;
+		System.out.println("Error count: " + errorCount +" Cause: "+e.getMessage());
 	}
 
 	public Integer getErrorCount()

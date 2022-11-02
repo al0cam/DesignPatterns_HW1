@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ErrorCatcher.ErrorCatcherSingleton;
 import FileType.BrodFile;
 import FileType.FileType;
 import FileType.LukaFile;
@@ -50,7 +51,7 @@ public class CSVReaderFactory {
                 fileType = new ZahtjevRezervacijeFile(fileContent);
 		}
 		catch (IOException e) {
-            // TODO: write error
+            ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
         }
         return fileType.getList();
     }

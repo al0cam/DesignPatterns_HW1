@@ -1,8 +1,13 @@
 package CLI;
 
-import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import csvReader.CSVReaderFactory;
+import store.StoreSingleton;
+import virtualTime.VirtualTimeSingleton;
 
 public class CLISingleton {
     private static CLISingleton cliSingleton;
@@ -29,7 +34,8 @@ public class CLISingleton {
             "(?<ZP>ZP \\d+ \\d+$)|"+
             "(?<Q>Q$))");
 
-        while(true)
+        boolean work = true;
+        while(work)
         {
             String command = System.console().readLine();
 
@@ -37,9 +43,9 @@ public class CLISingleton {
 
             if (matcher.matches()) {
                 System.out.println(matcher.group("bigGroup"));
-                String[] bigGroup = matcher.group("bigGroup").split(" ");
-                executeCommand(bigGroup, command);
-
+                VirtualTimeSingleton.getInstance().passTime();
+                System.out.println(VirtualTimeSingleton.getInstance().getVirtualtime().toString());
+                work = executeCommand(matcher);
             } 
             else {
                 System.out.println("ERROR parametri su krivo uneseni");
@@ -48,14 +54,56 @@ public class CLISingleton {
     }
     
 
-    private void executeCommand(String[] bigGroup, String command)
+    private boolean executeCommand(Matcher command)
     {
-        System.out.println(Arrays.toString(bigGroup));
-        // switch(bigGroup)
-        // {
+        switch(command.group("bigGroup").split(" ")[0])
+        {
+            case "I":{
 
-        // }
+            }
+            break;
 
+            case "VR":{
+                postaviVirtualnoVrijeme(command.group("datumIVrijeme"));
+            }
+            break;
+
+            case "V":{
+            }
+            break;
+
+            case "UR":{
+            }
+            break;
+            
+            case "ZD":{
+            }
+            break;
+
+            case "ZP":{
+            }
+            break;
+
+            case "Q":{
+                return false;
+            }
+        }
+        return true;
     } 
+
+    private void statusVezova()
+    {
+        
+    }
+
+    private void postaviVirtualnoVrijeme(String vrijemeIDatum)
+    {
+        VirtualTimeSingleton.getInstance().setVirtualtime(
+            LocalDateTime.parse(vrijemeIDatum, DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss"))
+        );
+        System.out.println("Virtual time set; new virtual time: "+ VirtualTimeSingleton.getInstance().getVirtualtime().toString());
+    }
+
+
 
 }
