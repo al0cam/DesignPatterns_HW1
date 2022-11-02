@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ErrorCatcher.ErrorCatcherSingleton;
 import models.Raspored;
 
 public class RasporedFile extends FileType {
@@ -31,6 +32,7 @@ public class RasporedFile extends FileType {
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
+                ErrorCatcherSingleton.getInstance().increaseErrorCount();;
             }
         }
         list = listOfObjects;

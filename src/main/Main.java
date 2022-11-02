@@ -35,7 +35,6 @@ public class Main {
 		
 		List<Raspored> rasporedi = csvReaderFactory.readFromCSV("./src/CSV/DZ_1_raspored.csv");
 		for (Raspored brod : rasporedi) {
-			e.printStackTrace();
 			// System.out.println(brod.getDaniUtjednu());
 			i++;
 		}

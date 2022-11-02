@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ErrorCatcher.ErrorCatcherSingleton;
 import models.Vez;
 
 public class VezFile extends FileType {
@@ -27,6 +28,7 @@ public class VezFile extends FileType {
                 listOfObjects.add(b);
 
             } catch (Exception e) {
+                ErrorCatcherSingleton.getInstance().increaseErrorCount();;
             }
         }
         list = listOfObjects;

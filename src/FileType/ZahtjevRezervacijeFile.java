@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ErrorCatcher.ErrorCatcherSingleton;
 import models.ZahtjevRezervacije;
 
 public class ZahtjevRezervacijeFile extends FileType {
@@ -25,7 +26,7 @@ public class ZahtjevRezervacijeFile extends FileType {
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
-                // TODO: handle exception
+                ErrorCatcherSingleton.getInstance().increaseErrorCount();
             }
         }
         list = listOfObjects;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ErrorCatcher.ErrorCatcherSingleton;
 import models.Brod;
 
 public class BrodFile extends FileType {
@@ -30,7 +31,7 @@ public class BrodFile extends FileType {
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
-                // TODO: write exception counter
+                ErrorCatcherSingleton.getInstance().increaseErrorCount(line,e);
             }
         }
         list = listOfObjects;

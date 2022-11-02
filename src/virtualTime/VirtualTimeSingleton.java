@@ -1,8 +1,11 @@
 package virtualTime;
 
+import java.time.LocalDateTime;
+
 public class VirtualTimeSingleton {
     private static VirtualTimeSingleton virtualTime;
-	
+	private LocalDateTime time;
+
 	private VirtualTimeSingleton()
 	{
 	}
@@ -15,5 +18,14 @@ public class VirtualTimeSingleton {
 		}
 		return virtualTime;
 	}
+
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
+	}
+
 
 }
