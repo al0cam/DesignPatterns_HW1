@@ -6,7 +6,7 @@ public class ZahtjevRezervacije {
     private Integer idBrod;
     private LocalDateTime datumVrijemeOd;
     private Integer trajanjePrivezaUSatima;
-    
+
     public ZahtjevRezervacije(Integer idBrod, LocalDateTime datumVrijemeOd, Integer trajanjePrivezaUSatima) {
         this.idBrod = idBrod;
         this.datumVrijemeOd = datumVrijemeOd;
@@ -30,5 +30,5 @@ public class ZahtjevRezervacije {
     public void setTrajanjePrivezaUSatima(Integer trajanjePrivezaUSatima) {
         this.trajanjePrivezaUSatima = trajanjePrivezaUSatima;
     }
-    
+
 }

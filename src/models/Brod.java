@@ -12,7 +12,7 @@ public class Brod {
     private Float kapacitetPutnika;
     private Float kapacitetOsobnihVozila;
     private Float kapacitetTereta;
-    
+
     public Brod() {
     }
 
@@ -98,5 +98,5 @@ public class Brod {
         this.kapacitetTereta = kapacitetTereta;
     }
 
-    
+
 }

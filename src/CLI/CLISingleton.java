@@ -7,14 +7,15 @@ import java.util.regex.Pattern;
 
 import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;
+import models.Vez;
 import store.StoreSingleton;
 import virtualTime.VirtualTimeSingleton;
 
 public class CLISingleton {
-    private static CLISingleton cliSingleton;
+public static CLISingleton cliSingleton;
 
 	private CLISingleton(){}
-	
+
 	public static CLISingleton getInstance()
 	{
 		if (cliSingleton == null)
@@ -47,20 +48,20 @@ public class CLISingleton {
                 VirtualTimeSingleton.getInstance().passTime();
                 System.out.println("Virtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString());
                 work = executeCommand(matcher);
-            } 
+            }
             else {
                 System.out.println("ERROR parametri su krivo uneseni");
             }
         }
     }
-    
+
 
     private boolean executeCommand(Matcher command)
     {
         switch(command.group("bigGroup").split(" ")[0])
         {
             case "I":{
-                
+                statusVezova();
             }
             break;
 
@@ -77,7 +78,7 @@ public class CLISingleton {
 		        ucitajDatoteku(command.group("nazivDatoteke"));
             }
             break;
-            
+
             case "ZD":{
             }
             break;
@@ -91,11 +92,26 @@ public class CLISingleton {
             }
         }
         return true;
-    } 
+    }
 
     private void statusVezova()
     {
-       
+
+
+        System.out.println(
+            String.format("%1$-5s | %2$-7s |  %3$-5s |  %4$-20s |  %5$-20s | %6$-20s | %7$-20s | %8$-10s",
+                "id","oznaka","vrsta","cijenaVezaPoSatu","maksimalnaDuljina","maksimalnaSirina","maksimalnaDubina","zauzet"
+            )
+        );
+
+        for (Vez vez : StoreSingleton.getInstance().getVezovi()) {
+            System.out.println(
+            String.format("%1$-5s | %2$-7s |  %3$-5s |  %4$-20s |  %5$-20s | %6$-20s | %7$-20s | %8$-10s",
+                vez.getId(),vez.getOznaka(),vez.getVrsta(),vez.getCijenaVezaPoSatu(),
+                vez.getMaksimalnaDuljina(),vez.getMaksimalnaSirina(),vez.getMaksimalnaDubina(),vez.isZauzet()
+            )
+        );
+        }
     }
 
     private void postaviVirtualnoVrijeme(String vrijemeIDatum)

@@ -2,9 +2,7 @@ package FileType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
@@ -14,9 +12,9 @@ public class LukaFile extends FileType {
     private List<Luka> list;
 
     public LukaFile(List<String[]> fileContent) {
-        List<Luka> listOfObjects = new ArrayList<Luka>();
+        List<Luka> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line)); 
+            // System.out.println(Arrays.toString(line));
 
 
             try {
@@ -37,8 +35,9 @@ public class LukaFile extends FileType {
         }
         list = listOfObjects;
     }
-    
-    public List<Luka> getList()
+
+    @Override
+	public List<Luka> getList()
     {
         return list;
     }

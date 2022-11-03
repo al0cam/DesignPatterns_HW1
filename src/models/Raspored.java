@@ -1,16 +1,17 @@
 package models;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 
 public class Raspored {
     private Integer idVez;
     private Integer idBrod;
-    private List<Integer> daniUtjednu;
+    private List<DayOfWeek> daniUtjednu;
     private LocalTime vrijemeOd;
     private LocalTime vrijemeDo;
-    
-    public Raspored(Integer idVez, Integer idBrod, List<Integer> daniUtjednu, LocalTime vrijemeOd,
+
+    public Raspored(Integer idVez, Integer idBrod, List<DayOfWeek> daniUtjednu, LocalTime vrijemeOd,
             LocalTime vrijemeDo) {
         this.idVez = idVez;
         this.idBrod = idBrod;
@@ -18,6 +19,7 @@ public class Raspored {
         this.vrijemeOd = vrijemeOd;
         this.vrijemeDo = vrijemeDo;
     }
+
     public Integer getIdVez() {
         return idVez;
     }
@@ -30,10 +32,10 @@ public class Raspored {
     public void setIdBrod(Integer idBrod) {
         this.idBrod = idBrod;
     }
-    public List<Integer> getDaniUtjednu() {
+    public List<DayOfWeek> getDaniUtjednu() {
         return daniUtjednu;
     }
-    public void setDaniUtjednu(List<Integer> daniUtjednu) {
+    public void setDaniUtjednu(List<DayOfWeek> daniUtjednu) {
         this.daniUtjednu = daniUtjednu;
     }
     public LocalTime getVrijemeOd() {
@@ -48,5 +50,9 @@ public class Raspored {
     public void setVrijemeDo(LocalTime vrijemeDo) {
         this.vrijemeDo = vrijemeDo;
     }
-    
+
+
+
+
+
 }

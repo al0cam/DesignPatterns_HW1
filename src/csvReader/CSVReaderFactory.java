@@ -15,7 +15,7 @@ import FileType.VezFile;
 import FileType.ZahtjevRezervacijeFile;
 
 public class CSVReaderFactory {
-    
+
     public <T> List<T> readFromCSV(String path)
     {
         FileType fileType = null;
@@ -32,7 +32,7 @@ public class CSVReaderFactory {
                 addToList = true;
 				line = line.replace(",", ".");
 				String[] tokens = line.split(";");
-                for (String string : tokens) 
+                for (String string : tokens)
                     if(string == null || string.equals(""))
                         addToList = false;
                 if(addToList && tokens.length == firstLine.length)
@@ -46,7 +46,7 @@ public class CSVReaderFactory {
             else if(isRasporedFile(firstLine))
                 fileType = new RasporedFile(fileContent);
             else if(isVezFile(firstLine))
-                fileType = new VezFile(fileContent);   
+                fileType = new VezFile(fileContent);
             else if(isZahtjevRezervacijeFile(firstLine))
                 fileType = new ZahtjevRezervacijeFile(fileContent);
 		}
@@ -101,4 +101,3 @@ public class CSVReaderFactory {
         return equal;
     }
 }
- 

@@ -1,9 +1,9 @@
 package FileType;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
@@ -13,16 +13,20 @@ public class RasporedFile extends FileType {
     private List<Raspored> list;
 
     public RasporedFile(List<String[]> fileContent) {
-        List<Raspored> listOfObjects = new ArrayList<Raspored>();
+        List<Raspored> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line)); 
+            // System.out.println(Arrays.toString(line));
 
             try {
-                List<Integer> daniUTjednuInt = new ArrayList<>();
+                List<DayOfWeek> daniUTjednuInt = new ArrayList<>();
                 for (String dan : line[2].split("[.]")) {
-                    daniUTjednuInt.add(Integer.parseInt(dan));
+
+                    int number = Integer.parseInt(dan);
+                    if(number == 0)
+                        number = 7;
+                    daniUTjednuInt.add(DayOfWeek.of(number));
                 }
-                
+
                 Raspored b = new Raspored(
                     Integer.parseInt(line[0]),
                     Integer.parseInt(line[1]),
@@ -37,8 +41,9 @@ public class RasporedFile extends FileType {
         }
         list = listOfObjects;
     }
-    
-    public List<Raspored> getList()
+
+    @Override
+	public List<Raspored> getList()
     {
         return list;
     }

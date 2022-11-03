@@ -13,7 +13,7 @@ public class VirtualTimeSingleton {
 	private VirtualTimeSingleton()
 	{
 	}
-	
+
 	public static VirtualTimeSingleton getInstance()
 	{
 		if (virtualTimeSingleton == null)

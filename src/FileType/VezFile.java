@@ -1,7 +1,6 @@
 package FileType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
@@ -11,10 +10,10 @@ public class VezFile extends FileType {
     private List<Vez> list;
 
     public VezFile(List<String[]> fileContent) {
-        List<Vez> listOfObjects = new ArrayList<Vez>();
+        List<Vez> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line)); 
-            
+            // System.out.println(Arrays.toString(line));
+
             try {
                 Vez b = new Vez(
                     Integer.parseInt(line[0]),
@@ -34,7 +33,8 @@ public class VezFile extends FileType {
         list = listOfObjects;
     }
 
-    public List<Vez> getList()
+    @Override
+	public List<Vez> getList()
     {
         return list;
     }

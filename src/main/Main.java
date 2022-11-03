@@ -1,7 +1,5 @@
 package main;
 
-import java.util.Arrays;
-
 import CLI.CLISingleton;
 import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;

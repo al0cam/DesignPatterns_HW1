@@ -1,5 +1,7 @@
 package store;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
 
 import models.Brod;
@@ -10,7 +12,7 @@ import models.ZahtjevRezervacije;
 import virtualTime.VirtualTimeSingleton;
 
 public class StoreSingleton {
-    private static StoreSingleton store;
+public static StoreSingleton store;
     public List<Brod> brodovi;
     public List<Luka> luke;
     public List<Raspored> rasporedi;
@@ -18,7 +20,7 @@ public class StoreSingleton {
     public List<ZahtjevRezervacije> zahtjeviRezervacija;
 
 	private StoreSingleton(){}
-	
+
 	public static StoreSingleton getInstance()
 	{
 		if (store == null)
@@ -26,6 +28,26 @@ public class StoreSingleton {
 			store = new StoreSingleton();
 		}
 		return store;
+	}
+
+	public void updateVezovi(){
+		DayOfWeek day = VirtualTimeSingleton.getInstance().getVirtualtime().getDayOfWeek();
+		int hours = VirtualTimeSingleton.getInstance().getVirtualtime().getHour();
+		int minutes = VirtualTimeSingleton.getInstance().getVirtualtime().getMinute();
+		LocalTime virtualLocalTime = LocalTime.of(hours, minutes);
+
+		for (Raspored raspored : rasporedi) {
+			if(
+				raspored.getDaniUtjednu().contains(day) &&
+			 	virtualLocalTime.compareTo(raspored.getVrijemeOd()) > 1 &&
+			 	virtualLocalTime.compareTo(raspored.getVrijemeDo()) < 1
+			){
+				for (Vez vez : vezovi) {
+					if(vez.getId() == raspored.getIdVez())
+						vez.setZauzet(true);
+				}
+			}
+		}
 	}
 
 	public List<Brod> getBrodovi() {
@@ -68,5 +90,5 @@ public class StoreSingleton {
 	public void setZahtjeviRezervacija(List<ZahtjevRezervacije> zahtjeviRezervacija) {
 		this.zahtjeviRezervacija = zahtjeviRezervacija;
 	}
-	
+
 }

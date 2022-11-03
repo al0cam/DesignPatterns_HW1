@@ -3,7 +3,6 @@ package FileType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
@@ -13,10 +12,10 @@ public class ZahtjevRezervacijeFile extends FileType {
     private List<ZahtjevRezervacije> list;
 
     public ZahtjevRezervacijeFile(List<String[]> fileContent) {
-        List<ZahtjevRezervacije> listOfObjects = new ArrayList<ZahtjevRezervacije>();
+        List<ZahtjevRezervacije> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line)); 
-           
+            // System.out.println(Arrays.toString(line));
+
 
             try {
                 ZahtjevRezervacije b = new ZahtjevRezervacije(
@@ -32,7 +31,8 @@ public class ZahtjevRezervacijeFile extends FileType {
         list = listOfObjects;
     }
 
-    public List<ZahtjevRezervacije> getList()
+    @Override
+	public List<ZahtjevRezervacije> getList()
     {
         return list;
     }

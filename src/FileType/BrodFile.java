@@ -1,7 +1,6 @@
 package FileType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
@@ -11,10 +10,10 @@ public class BrodFile extends FileType {
     private List<Brod> list;
 
     public BrodFile(List<String[]> fileContent) {
-        List<Brod> listOfObjects = new ArrayList<Brod>();
+        List<Brod> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line)); 
-            
+            // System.out.println(Arrays.toString(line));
+
             try {
                 Brod b = new Brod(
                     Integer.parseInt(line[0]),
@@ -42,15 +41,16 @@ public class BrodFile extends FileType {
     //     BrodFile brodFile = new BrodFile();
     //     List<Brod> listOfObjects = new ArrayList<Brod>();
     //     for (String[] line : fileContent) {
-    //         System.out.println(Arrays.toString(line)); 
+    //         System.out.println(Arrays.toString(line));
     //         Brod b = new Brod();
     //         listOfObjects.add(b);
     //     }
     //     brodFile.list = listOfObjects;
     //     return brodFile;
     // }
-    
-    public List<Brod> getList()
+
+    @Override
+	public List<Brod> getList()
     {
         return list;
     }

@@ -3,11 +3,11 @@ package ErrorCatcher;
 import java.util.Arrays;
 
 public class ErrorCatcherSingleton {
-    private static ErrorCatcherSingleton errorCatcher;
+public static ErrorCatcherSingleton errorCatcher;
 	private Integer errorCount = 0;
-	
+
 	private ErrorCatcherSingleton(){}
-	
+
 	public static ErrorCatcherSingleton getInstance()
 	{
 		if (errorCatcher == null)
