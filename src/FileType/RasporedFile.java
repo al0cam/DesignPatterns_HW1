@@ -15,8 +15,6 @@ public class RasporedFile extends FileType {
     public RasporedFile(List<String[]> fileContent) {
         List<Raspored> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line));
-
             try {
                 List<DayOfWeek> daniUTjednuInt = new ArrayList<>();
                 for (String dan : line[2].split("[.]")) {

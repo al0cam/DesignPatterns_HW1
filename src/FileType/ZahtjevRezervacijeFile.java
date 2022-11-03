@@ -14,9 +14,6 @@ public class ZahtjevRezervacijeFile extends FileType {
     public ZahtjevRezervacijeFile(List<String[]> fileContent) {
         List<ZahtjevRezervacije> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line));
-
-
             try {
                 ZahtjevRezervacije b = new ZahtjevRezervacije(
                     Integer.parseInt(line[0]),

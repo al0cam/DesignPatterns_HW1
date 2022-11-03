@@ -14,9 +14,6 @@ public class LukaFile extends FileType {
     public LukaFile(List<String[]> fileContent) {
         List<Luka> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line));
-
-
             try {
                 Luka b = new Luka(
                     line[0],

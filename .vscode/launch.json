@@ -14,7 +14,7 @@
             "type": "java",
             "name": "Launch Main",
             "request": "launch",
-            "args": "DZ_1_raspored.csv",
+            "args": "-l DZ_1_luka.csv -v DZ_1_vez.csv -b DZ_1_brod.csv -r DZ_1_raspored.csv",
             "mainClass": "bsikac_zadaca_1/main.Main",
             "projectName": "bsikac_zadaca_1"
         }

@@ -12,8 +12,6 @@ public class VezFile extends FileType {
     public VezFile(List<String[]> fileContent) {
         List<Vez> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line));
-
             try {
                 Vez b = new Vez(
                     Integer.parseInt(line[0]),

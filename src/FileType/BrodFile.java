@@ -12,8 +12,6 @@ public class BrodFile extends FileType {
     public BrodFile(List<String[]> fileContent) {
         List<Brod> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
-            // System.out.println(Arrays.toString(line));
-
             try {
                 Brod b = new Brod(
                     Integer.parseInt(line[0]),
@@ -35,19 +33,6 @@ public class BrodFile extends FileType {
         }
         list = listOfObjects;
     }
-
-    // @Override
-    // public FileType getFileType(List<String[]> fileContent) {
-    //     BrodFile brodFile = new BrodFile();
-    //     List<Brod> listOfObjects = new ArrayList<Brod>();
-    //     for (String[] line : fileContent) {
-    //         System.out.println(Arrays.toString(line));
-    //         Brod b = new Brod();
-    //         listOfObjects.add(b);
-    //     }
-    //     brodFile.list = listOfObjects;
-    //     return brodFile;
-    // }
 
     @Override
 	public List<Brod> getList()
