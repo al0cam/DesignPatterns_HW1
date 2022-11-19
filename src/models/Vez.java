@@ -9,14 +9,7 @@ public class Vez {
     private Integer maksimalnaSirina;
     private Float maksimalnaDubina;
 
-    private boolean zauzet = false;
 
-    @Override
-    public String toString() {
-        return "Vez [id=" + id + ", oznaka=" + oznaka + ", vrsta=" + vrsta + ", cijenaVezaPoSatu=" + cijenaVezaPoSatu
-                + ", maksimalnaDuljina=" + maksimalnaDuljina + ", maksimalnaSirina=" + maksimalnaSirina
-                + ", maksimalnaDubina=" + maksimalnaDubina + ", zauzet=" + zauzet + "]";
-    }
     public Vez(Integer id, String oznaka, String vrsta, Integer cijenaVezaPoSatu, Integer maksimalnaDuljina,
             Integer maksimalnaSirina, Float maksimalnaDubina) {
         this.id = id;
@@ -70,11 +63,4 @@ public class Vez {
         this.maksimalnaDubina = maksimalnaDubina;
     }
 
-
-    public boolean isZauzet() {
-        return zauzet;
-    }
-    public void setZauzet(boolean zauzet) {
-        this.zauzet = zauzet;
-    }
 }

@@ -40,6 +40,7 @@ public static CLISingleton cliSingleton;
         boolean work = true;
         while(work)
         {
+            System.out.print("\nCommand: ");
             String command = System.console().readLine();
 
             Matcher matcher = pattern.matcher(command);
@@ -61,6 +62,7 @@ public static CLISingleton cliSingleton;
         switch(command.group("bigGroup").split(" ")[0])
         {
             case "I":{
+                System.out.println("EMPTY: "+StoreSingleton.getInstance().rasporedEmpty());
                 statusVezova();
             }
             break;
@@ -96,19 +98,17 @@ public static CLISingleton cliSingleton;
 
     private void statusVezova()
     {
-
-
         System.out.println(
             String.format("%1$-5s | %2$-7s |  %3$-5s |  %4$-20s |  %5$-20s | %6$-20s | %7$-20s | %8$-10s",
                 "id","oznaka","vrsta","cijenaVezaPoSatu","maksimalnaDuljina","maksimalnaSirina","maksimalnaDubina","zauzet"
             )
         );
-
         for (Vez vez : StoreSingleton.getInstance().getVezovi()) {
             System.out.println(
             String.format("%1$-5s | %2$-7s |  %3$-5s |  %4$-20s |  %5$-20s | %6$-20s | %7$-20s | %8$-10s",
                 vez.getId(),vez.getOznaka(),vez.getVrsta(),vez.getCijenaVezaPoSatu(),
-                vez.getMaksimalnaDuljina(),vez.getMaksimalnaSirina(),vez.getMaksimalnaDubina(),vez.isZauzet()
+                vez.getMaksimalnaDuljina(),vez.getMaksimalnaSirina(),vez.getMaksimalnaDubina(),
+                StoreSingleton.getInstance().vezZauzetUVrijeme(vez, VirtualTimeSingleton.getInstance().getVirtualtime())
             )
         );
         }

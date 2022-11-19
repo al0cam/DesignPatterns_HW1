@@ -1,23 +1,27 @@
 package store;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import models.Brod;
 import models.Luka;
 import models.Raspored;
+import models.Rezervacija;
 import models.Vez;
 import models.ZahtjevRezervacije;
 import virtualTime.VirtualTimeSingleton;
 
 public class StoreSingleton {
-public static StoreSingleton store;
+	private static StoreSingleton store;
     public List<Brod> brodovi;
     public List<Luka> luke;
     public List<Raspored> rasporedi;
     public List<Vez> vezovi;
-    public List<ZahtjevRezervacije> zahtjeviRezervacija;
+    public List<ZahtjevRezervacije> zahtjeviRezervacija = new ArrayList<>();
+    public List<Rezervacija> rezervacije = new ArrayList<>();
 
 	private StoreSingleton(){}
 
@@ -30,6 +34,61 @@ public static StoreSingleton store;
 		return store;
 	}
 
+	
+	// TODO: provjera je li vez zauzet u odredjeno doba
+	// TODO: stvaranje rezervacije ako je vez slobodan u zahtjevano vrijeme
+	// TODO: vezanje broda za vez koji je rezervirao
+	// TODO: zahtjev za privez, stvaranje rezervacije za vez
+
+	public boolean rezervacijeEmpty()
+	{
+		return rezervacije.size() == 0;
+	}
+
+	public boolean zahtjeviRezervacijaEmpty()
+	{
+		return zahtjeviRezervacija.size() == 0;
+	}
+	public boolean rasporedEmpty()
+	{
+		return rasporedi == null || rasporedi.size() == 0;
+	}
+
+	public boolean zauzetoURasporedu(Vez vez, LocalDateTime time, Raspored raspored)
+	{		
+
+		if(raspored.getDaniUtjednu().contains(time.getDayOfWeek()))
+		{
+			return raspored.getVrijemeOd().isBefore(time.toLocalTime()) && raspored.getVrijemeDo().isAfter(time.toLocalTime()) ;
+		}
+		else
+			System.out.println("is false");
+		
+		return false;
+	}
+
+	public boolean vezZauzetUVrijeme(Vez vez, LocalDateTime time)
+	{
+		if(rezervacijeEmpty() && rasporedEmpty())
+			return false;
+		else if(rezervacijeEmpty())
+		{
+			for (Raspored raspored : rasporedi) {
+				if(zauzetoURasporedu(vez,time,raspored))
+				{
+
+				}
+				
+			}
+		}
+		else if(rasporedEmpty())
+		{
+
+		}
+
+		return true;
+	}
+	
 	public void updateVezovi(){
 		DayOfWeek day = VirtualTimeSingleton.getInstance().getVirtualtime().getDayOfWeek();
 		int hours = VirtualTimeSingleton.getInstance().getVirtualtime().getHour();
@@ -42,10 +101,7 @@ public static StoreSingleton store;
 			 	virtualLocalTime.compareTo(raspored.getVrijemeOd()) > 1 &&
 			 	virtualLocalTime.compareTo(raspored.getVrijemeDo()) < 1
 			){
-				for (Vez vez : vezovi) {
-					if(vez.getId() == raspored.getIdVez())
-						vez.setZauzet(true);
-				}
+				
 			}
 		}
 	}

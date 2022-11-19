@@ -33,7 +33,6 @@ public class Main {
 		if(matcher.matches() && args.length == 6)
 		{
 			if(
-				
 				findFile(matcher.group("arg1"),matcher.group("file1")) &&
 				findFile(matcher.group("arg2"),matcher.group("file2")) &&
 				findFile(matcher.group("arg3"),matcher.group("file3")) 
@@ -45,7 +44,6 @@ public class Main {
 		else if((matcher.matches() && args.length == 8))
 		{
 			if(
-				
 				findFile(matcher.group("arg1"),matcher.group("file1")) &&
 				findFile(matcher.group("arg2"),matcher.group("file2")) &&
 				findFile(matcher.group("arg3"),matcher.group("file3")) &&
@@ -93,7 +91,6 @@ public class Main {
 					StoreSingleton.getInstance().rasporedi = csvReaderFactory.readFromCSV(fileName);
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
-					return false;
 				}
 				return true;
 			default:
