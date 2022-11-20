@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import ErrorCatcher.ErrorCatcherSingleton;
 import models.Brod;
 import models.Luka;
 import models.Raspored;
@@ -35,7 +36,7 @@ public class StoreSingleton {
 	}
 
 	
-	// TODO: provjera je li vez zauzet u odredjeno doba
+	// TODO: provjera je li vez zauzet u odredjeno doba >> DONE ALI TREBA TEST
 	// TODO: stvaranje rezervacije ako je vez slobodan u zahtjevano vrijeme
 	// TODO: vezanje broda za vez koji je rezervirao
 	// TODO: zahtjev za privez, stvaranje rezervacije za vez
@@ -54,16 +55,22 @@ public class StoreSingleton {
 		return rasporedi == null || rasporedi.size() == 0;
 	}
 
+	public boolean isTimeBetween(LocalDateTime time1, LocalDateTime time2, LocalDateTime between)
+	{
+		return time1.isBefore(between) && time2.isAfter(between);
+	}
+
+	public boolean isTimeBetweenHours(LocalTime time1, LocalTime time2, LocalTime between)
+	{
+		return time1.isBefore(between) && time2.isAfter(between);
+	}
+
 	public boolean zauzetoURasporedu(Vez vez, LocalDateTime time, Raspored raspored)
 	{		
-
 		if(raspored.getDaniUtjednu().contains(time.getDayOfWeek()))
 		{
-			return raspored.getVrijemeOd().isBefore(time.toLocalTime()) && raspored.getVrijemeDo().isAfter(time.toLocalTime()) ;
+			return isTimeBetweenHours(raspored.getVrijemeOd(), raspored.getVrijemeDo(), time.toLocalTime());
 		}
-		else
-			System.out.println("is false");
-		
 		return false;
 	}
 
@@ -73,20 +80,94 @@ public class StoreSingleton {
 			return false;
 		else if(rezervacijeEmpty())
 		{
-			for (Raspored raspored : rasporedi) {
-				if(zauzetoURasporedu(vez,time,raspored))
-				{
-
-				}
-				
-			}
+			for (Raspored raspored : rasporedi) 
+				return zauzetoURasporedu(vez,time,raspored);
 		}
 		else if(rasporedEmpty())
 		{
+			for (Rezervacija rezervacija : rezervacije) {
+				if(rezervacija.getVez().equals(vez))
+				{
+					// TODO: uzet ovu liniju i ubacit u transformaciju zahtjeva u pravu rezervaciju
+					// LocalDateTime vrijemeDo = rezersvacija.getDatumVrijemeOd().plusHours(rezervacija.getTrajanjePrivezaUSatima());
+					return isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time);
+				}
+			}
+		}
+		else
+		{
+			for (Raspored raspored : rasporedi) 
+				return zauzetoURasporedu(vez,time,raspored);
+			
+			for (Rezervacija rezervacija : rezervacije) 
+				if(rezervacija.getVez().equals(vez))
+					return isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time);
+		}
+		return false;
+	}
 
+	public List<Vez> pronadjiSlobodneVezove(LocalDateTime time)
+	{
+		List<Vez> slobodniVezovi = new ArrayList<>();
+		for (Vez vez : vezovi) 
+			if(vezZauzetUVrijeme(vez, time))
+				slobodniVezovi.add(vez);
+
+		return slobodniVezovi;
+	}
+
+	public boolean paseBrodVezu(Brod brod, Vez vez)
+	{
+		return brod.getGaz() <= vez.getMaksimalnaDubina() &&
+			brod.getDuljina() <= vez.getMaksimalnaDuljina() && 
+			brod.getSirina() <= vez.getMaksimalnaSirina();
+	}
+
+	public Brod getBrodById(Integer id) throws Exception
+	{
+		Brod brod = null;
+		for (Brod bro : brodovi) {
+			if(bro.getId().equals(id))
+				brod = bro;
 		}
 
-		return true;
+		if(brod == null)
+			throw new Exception("No brod with id "+id);
+		
+		return brod;
+	}
+
+	public void pretvoriZahtjevURezervaciju(ZahtjevRezervacije zahtjevRezervacije)
+	{
+		try {
+			Brod brod = getBrodById(zahtjevRezervacije.getIdBrod());
+			Rezervacija rezervacija = new Rezervacija();
+			List<Vez> slobodniVezovi = pronadjiSlobodneVezove(zahtjevRezervacije.getDatumVrijemeOd());
+			if(slobodniVezovi.size() == 0)
+			{
+				System.out.println("Nema slobodnih vezova");
+			}
+			else
+			{
+				for (Rezervacija rez : rezervacije) {
+					// if(rez.getVez().equals(zahtjevRezervacije.))
+					// TODO: uzet ovu liniju i ubacit u transformaciju zahtjeva u pravu rezervaciju
+						// LocalDateTime vrijemeDo = rezersvacija.getDatumVrijemeOd().plusHours(rezervacija.getTrajanjePrivezaUSatima());
+						
+				}
+				rezervacije.add(rezervacija);
+			}
+			
+		} catch (Exception e) {
+			ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+		}
+	}
+
+	public void zahtjeviURezervacije()
+	{
+		for (ZahtjevRezervacije zahtjevRezervacije : zahtjeviRezervacija) {
+			pretvoriZahtjevURezervaciju(zahtjevRezervacije);
+		}
 	}
 	
 	public void updateVezovi(){

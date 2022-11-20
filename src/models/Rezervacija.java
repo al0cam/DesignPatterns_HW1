@@ -6,7 +6,10 @@ public class Rezervacija {
     private Brod brod;
     private Vez vez;
     private LocalDateTime datumVrijemeOd;
+    private LocalDateTime datumVrijemeDo;
     private Integer trajanjePrivezaUSatima;
+
+    
 
     
     public Brod getBrod() {
@@ -32,6 +35,12 @@ public class Rezervacija {
     }
     public void setTrajanjePrivezaUSatima(Integer trajanjePrivezaUSatima) {
         this.trajanjePrivezaUSatima = trajanjePrivezaUSatima;
+    }
+    public LocalDateTime getDatumVrijemeDo() {
+        return datumVrijemeDo;
+    }
+    public void setDatumVrijemeDo(LocalDateTime datumVrijemeDo) {
+        this.datumVrijemeDo = datumVrijemeDo;
     }
 
     
