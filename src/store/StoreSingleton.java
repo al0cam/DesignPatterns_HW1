@@ -37,8 +37,9 @@ public class StoreSingleton {
 
 	
 	// TODO: provjera je li vez zauzet u odredjeno doba >> DONE ALI TREBA TEST
-	// TODO: stvaranje rezervacije ako je vez slobodan u zahtjevano vrijeme
-	// TODO: vezanje broda za vez koji je rezervirao
+	// TODO: stvaranje rezervacije ako je vez slobodan u zahtjevano vrijeme >> DONE ALI TREBA TEST
+	// TODO: vezanje broda za vez koji je rezervirao >> VALDJA DONE JER
+	//  NEMA NIGDJE ZAPRAVO OPCIJA DA JE BROD ZAVEZAN OSIM DA JE VEZ ZAUZET
 	// TODO: zahtjev za privez, stvaranje rezervacije za vez
 
 	public boolean rezervacijeEmpty()
@@ -161,11 +162,11 @@ public class StoreSingleton {
 		return brod;
 	}
 
-	public void pretvoriZahtjevURezervaciju(ZahtjevRezervacije zahtjevRezervacije)
+	public Rezervacija pretvoriZahtjevURezervaciju(ZahtjevRezervacije zahtjevRezervacije)
 	{
+		Rezervacija rezervacija = null;
 		try {
 			Brod brod = getBrodById(zahtjevRezervacije.getIdBrod());
-			Rezervacija rezervacija = new Rezervacija();
 			List<Vez> slobodniVezovi = pronadjiSlobodneVezove(zahtjevRezervacije.getDatumVrijemeOd());
 			if(slobodniVezovi.size() == 0)
 			{
@@ -173,24 +174,30 @@ public class StoreSingleton {
 			}
 			else
 			{
-				for (Rezervacija rez : rezervacije) {
-					
-					// TODO: uzet ovu liniju i ubacit u transformaciju zahtjeva u pravu rezervaciju
-						// LocalDateTime vrijemeDo = rezersvacija.getDatumVrijemeOd().plusHours(rezervacija.getTrajanjePrivezaUSatima());
-						
+				for (Vez vez : slobodniVezovi) {
+					if(paseBrodVezu(brod, vez))
+					{
+						rezervacija = new Rezervacija(brod, vez, 
+						zahtjevRezervacije.getDatumVrijemeOd(), 
+						zahtjevRezervacije.getDatumVrijemeOd().plusHours(zahtjevRezervacije.getTrajanjePrivezaUSatima()), 
+						zahtjevRezervacije.getTrajanjePrivezaUSatima());
+					}
 				}
-				rezervacije.add(rezervacija);
+				System.out.println("Brod ne odgovara niti jednom slobodnom vezu");
 			}
-			
 		} catch (Exception e) {
 			ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
 		}
+		return rezervacija;
 	}
 
 	public void zahtjeviURezervacije()
 	{
+		Rezervacija rezervacija;
 		for (ZahtjevRezervacije zahtjevRezervacije : zahtjeviRezervacija) {
-			pretvoriZahtjevURezervaciju(zahtjevRezervacije);
+			rezervacija = pretvoriZahtjevURezervaciju(zahtjevRezervacije);
+			if(rezervacija != null)
+				rezervacije.add(rezervacija);
 		}
 	}
 	
