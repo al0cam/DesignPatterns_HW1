@@ -10,8 +10,16 @@ public class Rezervacija {
     private Integer trajanjePrivezaUSatima;
 
     
-
     
+    
+    public Rezervacija(Brod brod, Vez vez, LocalDateTime datumVrijemeOd, LocalDateTime datumVrijemeDo,
+            Integer trajanjePrivezaUSatima) {
+        this.brod = brod;
+        this.vez = vez;
+        this.datumVrijemeOd = datumVrijemeOd;
+        this.datumVrijemeDo = datumVrijemeDo;
+        this.trajanjePrivezaUSatima = trajanjePrivezaUSatima;
+    }
     public Brod getBrod() {
         return brod;
     }

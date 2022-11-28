@@ -4,7 +4,7 @@ public class Brod {
     private Integer id;
     private String oznakaBroda;
     private String naziv;
-    private String tip;
+    private String vrsta;
     private Float duljina;
     private Float sirina;
     private Float gaz;
@@ -16,12 +16,12 @@ public class Brod {
     public Brod() {
     }
 
-    public Brod(Integer id, String oznakaBroda, String naziv, String tip, Float duljina, Float sirina, Float gaz,
+    public Brod(Integer id, String oznakaBroda, String naziv, String vrsta, Float duljina, Float sirina, Float gaz,
     Float maksimalnaBrzina, Float kapacitetPutnika, Float kapacitetOsobnihVozila, Float kapacitetTereta) {
         this.id = id;
         this.oznakaBroda = oznakaBroda;
         this.naziv = naziv;
-        this.tip = tip;
+        this.vrsta = vrsta;
         this.duljina = duljina;
         this.sirina = sirina;
         this.gaz = gaz;
@@ -49,11 +49,11 @@ public class Brod {
     public void setNaziv(String naziv) {
         this.naziv = naziv;
     }
-    public String getTip() {
-        return tip;
+    public String getVrsta() {
+        return vrsta;
     }
-    public void setTip(String tip) {
-        this.tip = tip;
+    public void setVrsta(String vrsta) {
+        this.vrsta = vrsta;
     }
     public Float getDuljina() {
         return duljina;

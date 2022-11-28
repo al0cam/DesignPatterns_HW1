@@ -116,9 +116,33 @@ public class StoreSingleton {
 		return slobodniVezovi;
 	}
 
+	private boolean vrstaBrodaOdgovaraVrstiVeza(Brod brod, Vez vez)
+	{
+		if(
+			(brod.getVrsta().equals("TR") || 
+			brod.getVrsta().equals("KA") || 
+			brod.getVrsta().equals("KL") || 
+			brod.getVrsta().equals("KR")) &&
+			vez.getVrsta().equals("PU")
+		) return true;
+		else if(
+			(brod.getVrsta().equals("RI") || 
+			brod.getVrsta().equals("TE")) &&
+			vez.getVrsta().equals("PO")
+		) return true;
+		else if(
+			(brod.getVrsta().equals("JA") || 
+			brod.getVrsta().equals("RO") || 
+			brod.getVrsta().equals("BR")) &&
+			vez.getVrsta().equals("OS")
+		) return true;
+		else return false;
+	}
+
 	public boolean paseBrodVezu(Brod brod, Vez vez)
 	{
-		return brod.getGaz() <= vez.getMaksimalnaDubina() &&
+		return vrstaBrodaOdgovaraVrstiVeza(brod, vez) &&
+			brod.getGaz() <= vez.getMaksimalnaDubina() &&
 			brod.getDuljina() <= vez.getMaksimalnaDuljina() && 
 			brod.getSirina() <= vez.getMaksimalnaSirina();
 	}
@@ -150,7 +174,7 @@ public class StoreSingleton {
 			else
 			{
 				for (Rezervacija rez : rezervacije) {
-					// if(rez.getVez().equals(zahtjevRezervacije.))
+					
 					// TODO: uzet ovu liniju i ubacit u transformaciju zahtjeva u pravu rezervaciju
 						// LocalDateTime vrijemeDo = rezersvacija.getDatumVrijemeOd().plusHours(rezervacija.getTrajanjePrivezaUSatima());
 						
