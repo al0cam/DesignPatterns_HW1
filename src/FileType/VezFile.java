@@ -22,10 +22,10 @@ public class VezFile extends FileType {
                     Integer.parseInt(line[5]),
                     Float.parseFloat(line[6])
                 );
+                // TODO: check if vez pase na luku ili je dublji/duzi/siri/stogod
                 listOfObjects.add(b);
-
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().increaseErrorCountForLine(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
             }
         }
         list = listOfObjects;

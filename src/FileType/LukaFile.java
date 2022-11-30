@@ -27,7 +27,7 @@ public class LukaFile extends FileType {
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().increaseErrorCountForLine(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
             }
         }
         list = listOfObjects;

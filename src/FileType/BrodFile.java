@@ -28,7 +28,7 @@ public class BrodFile extends FileType {
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().increaseErrorCountForLine(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
             }
         }
         list = listOfObjects;

@@ -51,7 +51,7 @@ public class CSVReaderFactory {
                 fileType = new ZahtjevRezervacijeFile(fileContent);
 		}
 		catch (IOException e) {
-            ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+            ErrorCatcherSingleton.getInstance().catchGeneralError(e);
         }
         return fileType.getList();
     }

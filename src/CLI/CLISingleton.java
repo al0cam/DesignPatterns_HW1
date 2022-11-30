@@ -49,9 +49,10 @@ public static CLISingleton cliSingleton;
                 VirtualTimeSingleton.getInstance().passTime();
                 System.out.println("Virtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString());
                 work = executeCommand(matcher);
+                System.out.println("Virtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString());
             }
             else {
-                System.out.println("ERROR parametri su krivo uneseni");
+                ErrorCatcherSingleton.getInstance().catchCustomError("ERROR parametri su krivo uneseni");
             }
         }
     }
@@ -62,7 +63,6 @@ public static CLISingleton cliSingleton;
         switch(command.group("bigGroup").split(" ")[0])
         {
             case "I":{
-                System.out.println("EMPTY: "+StoreSingleton.getInstance().rasporedEmpty());
                 statusVezova();
             }
             break;
@@ -129,7 +129,7 @@ public static CLISingleton cliSingleton;
         try {
             StoreSingleton.getInstance().zahtjeviRezervacija = csvReaderFactory.readFromCSV(naziv);
         } catch (Exception e) {
-            ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+            ErrorCatcherSingleton.getInstance().catchGeneralError(e);
         }
     }
 

@@ -1,6 +1,5 @@
 package main;
 
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,17 +17,16 @@ public class Main {
 		String joinedArgs = String.join(" ",args);
 		if(args.length < 6)
 		{
-			System.out.println("ERROR not enough arguments provided");
+			ErrorCatcherSingleton.getInstance().catchCustomError("ERROR not enough arguments provided");
 			return;
 		}
 		else if(!joinedArgs.contains("-l") || !joinedArgs.contains("-b") || !joinedArgs.contains("-v"))
 		{
-			System.out.println("ERROR missing mandatory arguments");
+			ErrorCatcherSingleton.getInstance().catchCustomError("ERROR missing mandatory arguments");
 			return;
 		}
 
 		Matcher matcher = pattern.matcher(joinedArgs);
-
 
 		if(matcher.matches() && args.length == 6)
 		{
@@ -66,7 +64,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().setLuke(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
 				}
 				return true;
@@ -74,7 +72,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().setBrodovi(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
 				}
 				return true;
@@ -82,7 +80,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().setVezovi(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
 				}
 				return true;
@@ -90,7 +88,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().rasporedi = csvReaderFactory.readFromCSV(fileName);
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 				}
 				return true;
 			default:

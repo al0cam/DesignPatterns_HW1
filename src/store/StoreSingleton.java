@@ -40,7 +40,8 @@ public class StoreSingleton {
 	// TODO: stvaranje rezervacije ako je vez slobodan u zahtjevano vrijeme >> DONE ALI TREBA TEST
 	// TODO: vezanje broda za vez koji je rezervirao >> VALDJA DONE JER
 	//  NEMA NIGDJE ZAPRAVO OPCIJA DA JE BROD ZAVEZAN OSIM DA JE VEZ ZAUZET
-	// TODO: zahtjev za privez, stvaranje rezervacije za vez
+	// TODO: zahtjev za privez ako je brod rezervirao vez
+	// TODO: zahtjev za privez ako brod nema rezervaciju, stvaranje rezervacije za vez
 
 	public boolean rezervacijeEmpty()
 	{
@@ -89,8 +90,6 @@ public class StoreSingleton {
 			for (Rezervacija rezervacija : rezervacije) {
 				if(rezervacija.getVez().equals(vez))
 				{
-					// TODO: uzet ovu liniju i ubacit u transformaciju zahtjeva u pravu rezervaciju
-					// LocalDateTime vrijemeDo = rezersvacija.getDatumVrijemeOd().plusHours(rezervacija.getTrajanjePrivezaUSatima());
 					return isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time);
 				}
 			}
@@ -186,7 +185,7 @@ public class StoreSingleton {
 				System.out.println("Brod ne odgovara niti jednom slobodnom vezu");
 			}
 		} catch (Exception e) {
-			ErrorCatcherSingleton.getInstance().increaseErrorCountForGeneralError(e);
+			ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 		}
 		return rezervacija;
 	}
