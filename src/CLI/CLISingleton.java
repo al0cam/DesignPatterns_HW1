@@ -7,7 +7,10 @@ import java.util.regex.Pattern;
 
 import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;
+import models.Raspored;
+import models.Rezervacija;
 import models.Vez;
+import models.ZahtjevRezervacije;
 import store.StoreSingleton;
 import virtualTime.VirtualTimeSingleton;
 
@@ -29,8 +32,8 @@ public static CLISingleton cliSingleton;
     {
         Pattern pattern = Pattern.compile(
             "(?<bigGroup>(I$)|"+
-            "(VR (?<datumIVrijeme>[0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
-            "(V (?<vrstaVeza>[A-Z]{2}) (?<status>[A-Z]) (?<datumVrijemeOd>[0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9]) (?<datumVrijemeDo>[0-3]?\\d\\.[0-1][0-9]\\.\\d{4}. \\d?\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
+            "(VR (?<datumIVrijeme>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
+            "(V (?<vrstaVeza>[A-Z]{2}) (?<status>[A-Z]) (?<datumVrijemeOd>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9]) (?<datumVrijemeDo>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
             "(UR (?<nazivDatoteke>\\w+\\.csv)$)|"+
             "(ZD (?<idBrodZD>\\d+)$)|"+
             "(ZP (?<idBrodZP>\\d+) (?<trajanjeUSatima>\\d+)$)|"+
@@ -47,9 +50,9 @@ public static CLISingleton cliSingleton;
 
             if (matcher.matches()) {
                 VirtualTimeSingleton.getInstance().passTime();
-                System.out.println("Virtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString());
+                System.out.println("\nVirtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString() +" Day: "+VirtualTimeSingleton.getInstance().getVirtualtime().getDayOfWeek());
                 work = executeCommand(matcher);
-                System.out.println("Virtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString());
+                System.out.println("\nVirtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString() +" Day: "+VirtualTimeSingleton.getInstance().getVirtualtime().getDayOfWeek());
             }
             else {
                 ErrorCatcherSingleton.getInstance().catchCustomError("ERROR parametri su krivo uneseni");
@@ -73,6 +76,7 @@ public static CLISingleton cliSingleton;
             break;
 
             case "V":{
+                
             }
             break;
 
@@ -86,11 +90,22 @@ public static CLISingleton cliSingleton;
             break;
 
             case "ZP":{
+                stvoriZahtjev(Integer.parseInt(command.group("idBrod")),Integer.parseInt(command.group("trajanjeUSatima")));
             }
             break;
 
             case "Q":{
-                return false;
+
+                for (Raspored raspored : StoreSingleton.getInstance().getRasporedi()) {
+                    System.out.println(raspored.getIdVez() + " brod: "+ raspored.getIdBrod()+  " dani: "+ raspored.getDaniUtjednu()+ " od:"+raspored.getVrijemeOd()+" do: " + raspored.getVrijemeDo()) ;
+                }
+
+
+                System.out.println("\nRezervacije:");
+                for (Rezervacija rezervacija: StoreSingleton.getInstance().getRezervacije()) {
+                    System.out.println(rezervacija.getVez().getId() + " brod: "+ rezervacija.getBrod().getId()+  " od: "+ rezervacija.getDatumVrijemeOd()+ "do: " + rezervacija.getDatumVrijemeDo()) ;
+                }
+                // return false;
             }
         }
         return true;
@@ -125,14 +140,22 @@ public static CLISingleton cliSingleton;
     private void ucitajDatoteku(String naziv)
     {
         CSVReaderFactory csvReaderFactory = new CSVReaderFactory();
-
         try {
             StoreSingleton.getInstance().zahtjeviRezervacija = csvReaderFactory.readFromCSV(naziv);
+            StoreSingleton.getInstance().zahtjeviURezervacije();
         } catch (Exception e) {
             ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+        }
+
+        System.out.println("LIST");
+        for (Rezervacija rezervacija : StoreSingleton.getInstance().getRezervacije()) {
+            System.out.println(rezervacija.getBrod().getId() +" " + rezervacija.getVez().getId() +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeOd()) +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeDo()));
         }
     }
 
 
-
+    private void stvoriZahtjev(Integer idBrod, Integer trajanjeUSatima)
+    {
+        StoreSingleton.getInstance().novaRezervacija(idBrod, trajanjeUSatima);
+    }
 }

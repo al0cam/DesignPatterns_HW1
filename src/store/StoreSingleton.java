@@ -3,6 +3,7 @@ package store;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +37,18 @@ public class StoreSingleton {
 	}
 
 	
-	// TODO: provjera je li vez zauzet u odredjeno doba >> DONE ALI TREBA TEST
+	// provjera je li vez zauzet u odredjeno doba >> DONE 
 	// TODO: stvaranje rezervacije ako je vez slobodan u zahtjevano vrijeme >> DONE ALI TREBA TEST
 	// TODO: vezanje broda za vez koji je rezervirao >> VALDJA DONE JER
 	//  NEMA NIGDJE ZAPRAVO OPCIJA DA JE BROD ZAVEZAN OSIM DA JE VEZ ZAUZET
-	// TODO: zahtjev za privez ako je brod rezervirao vez
-	// TODO: zahtjev za privez ako brod nema rezervaciju, stvaranje rezervacije za vez
+	// TODO: zahtjev za privez ako je brod rezervirao vez >>> rezultat je samo notification koji kaze jel privezano il ne
+	// TODO: zahtjev za privez ako brod nema rezervaciju, stvaranje rezervacije za vez 
+
+
+	public String timeToString(LocalDateTime time)
+	{
+		return DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss").format(time);
+	}
 
 	public boolean rezervacijeEmpty()
 	{
@@ -79,38 +86,119 @@ public class StoreSingleton {
 	public boolean vezZauzetUVrijeme(Vez vez, LocalDateTime time)
 	{
 		if(rezervacijeEmpty() && rasporedEmpty())
+		{
+			System.out.println("ALL EMPTY");
 			return false;
+		}
 		else if(rezervacijeEmpty())
 		{
-			for (Raspored raspored : rasporedi) 
-				return zauzetoURasporedu(vez,time,raspored);
+			// System.out.println("2");
+			for (Raspored raspored : rasporedi) {
+				if(raspored.getIdVez().equals(vez.getId()))
+				{
+					if(zauzetoURasporedu(vez,time,raspored))
+						return true;
+				}
+			}
 		}
 		else if(rasporedEmpty())
 		{
+			// System.out.println("3");
 			for (Rezervacija rezervacija : rezervacije) {
 				if(rezervacija.getVez().equals(vez))
 				{
-					return isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time);
+					if(isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time))
+						return true;
 				}
 			}
 		}
 		else
 		{
+			// System.out.println("else 1");
 			for (Raspored raspored : rasporedi) 
-				return zauzetoURasporedu(vez,time,raspored);
+				if(raspored.getIdVez().equals(vez.getId()))
+				{
+					if(zauzetoURasporedu(vez,time,raspored))
+						return true;
+				}
 			
+
+			// System.out.println("else 2");
 			for (Rezervacija rezervacija : rezervacije) 
 				if(rezervacija.getVez().equals(vez))
-					return isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time);
+				{
+					// System.out.println("else 2 vez == vez");
+					if(isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time))
+					{
+						// System.out.println("else 2 if");
+						return true;
+					}
+				}
 		}
 		return false;
 	}
+
+	// TODO: vez zauzet od do uz ispis do kad je zauzet
+
+	// public boolean vezZauzetOdDo(Vez vez, LocalDateTime vrijemeOd, LocalDateTime vrijemeDo)
+	// {
+	// 	if(rezervacijeEmpty() && rasporedEmpty())
+	// 	{
+	// 		return false;
+	// 	}
+	// 	else if(rezervacijeEmpty())
+	// 	{
+	// 		// System.out.println("2");
+	// 		for (Raspored raspored : rasporedi) {
+	// 			if(raspored.getIdVez().equals(vez.getId()))
+	// 			{
+	// 				if(zauzetoURasporedu(vez,time,raspored))
+	// 					return true;
+	// 			}
+	// 		}
+	// 	}
+	// 	else if(rasporedEmpty())
+	// 	{
+	// 		// System.out.println("3");
+	// 		for (Rezervacija rezervacija : rezervacije) {
+	// 			if(rezervacija.getVez().equals(vez))
+	// 			{
+	// 				if(isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time))
+	// 					return true;
+	// 			}
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		// System.out.println("else 1");
+	// 		for (Raspored raspored : rasporedi) 
+	// 			if(raspored.getIdVez().equals(vez.getId()))
+	// 			{
+	// 				if(zauzetoURasporedu(vez,time,raspored))
+	// 					return true;
+	// 			}
+			
+
+	// 		// System.out.println("else 2");
+	// 		for (Rezervacija rezervacija : rezervacije) 
+	// 			if(rezervacija.getVez().equals(vez))
+	// 			{
+	// 				// System.out.println("else 2 vez == vez");
+	// 				if(isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time))
+	// 				{
+	// 					// System.out.println("else 2 if");
+	// 					return true;
+	// 				}
+	// 			}
+	// 	}
+	// 	return false;
+	// }
 
 	public List<Vez> pronadjiSlobodneVezove(LocalDateTime time)
 	{
 		List<Vez> slobodniVezovi = new ArrayList<>();
 		for (Vez vez : vezovi) 
-			if(vezZauzetUVrijeme(vez, time))
+			if(!vezZauzetUVrijeme(vez, time))
 				slobodniVezovi.add(vez);
 
 		return slobodniVezovi;
@@ -163,20 +251,19 @@ public class StoreSingleton {
 
 	public Rezervacija pretvoriZahtjevURezervaciju(ZahtjevRezervacije zahtjevRezervacije)
 	{
-		Rezervacija rezervacija = null;
 		try {
 			Brod brod = getBrodById(zahtjevRezervacije.getIdBrod());
 			List<Vez> slobodniVezovi = pronadjiSlobodneVezove(zahtjevRezervacije.getDatumVrijemeOd());
 			if(slobodniVezovi.size() == 0)
 			{
-				System.out.println("Nema slobodnih vezova");
+				System.out.println("Nema slobodnih vezova u trazeno vrijeme");
 			}
 			else
 			{
 				for (Vez vez : slobodniVezovi) {
 					if(paseBrodVezu(brod, vez))
 					{
-						rezervacija = new Rezervacija(brod, vez, 
+						return new Rezervacija(brod, vez, 
 						zahtjevRezervacije.getDatumVrijemeOd(), 
 						zahtjevRezervacije.getDatumVrijemeOd().plusHours(zahtjevRezervacije.getTrajanjePrivezaUSatima()), 
 						zahtjevRezervacije.getTrajanjePrivezaUSatima());
@@ -187,7 +274,7 @@ public class StoreSingleton {
 		} catch (Exception e) {
 			ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 		}
-		return rezervacija;
+		return null;
 	}
 
 	public void zahtjeviURezervacije()
@@ -199,22 +286,25 @@ public class StoreSingleton {
 				rezervacije.add(rezervacija);
 		}
 	}
-	
-	public void updateVezovi(){
-		DayOfWeek day = VirtualTimeSingleton.getInstance().getVirtualtime().getDayOfWeek();
-		int hours = VirtualTimeSingleton.getInstance().getVirtualtime().getHour();
-		int minutes = VirtualTimeSingleton.getInstance().getVirtualtime().getMinute();
-		LocalTime virtualLocalTime = LocalTime.of(hours, minutes);
 
-		for (Raspored raspored : rasporedi) {
-			if(
-				raspored.getDaniUtjednu().contains(day) &&
-			 	virtualLocalTime.compareTo(raspored.getVrijemeOd()) > 1 &&
-			 	virtualLocalTime.compareTo(raspored.getVrijemeDo()) < 1
-			){
-				
-			}
-		}
+	public void novaRezervacija(Integer idBrod, Integer trajanjeUSatima)
+	{
+		Rezervacija rezervacija = pretvoriZahtjevURezervaciju(
+			new ZahtjevRezervacije(idBrod, VirtualTimeSingleton.getInstance().getVirtualtime(), trajanjeUSatima)
+		);
+		
+		if(rezervacija != null)
+			System.out.println("Kreiran je zahtjev");
+		else
+			System.out.println("Nije kreiran zahtjev");
+	}
+
+
+	// TODO: napisat logiku, neki print il nest
+
+	public void priveziBrodSRezervacijom()
+	{
+
 	}
 
 	public List<Brod> getBrodovi() {
@@ -258,4 +348,13 @@ public class StoreSingleton {
 		this.zahtjeviRezervacija = zahtjeviRezervacija;
 	}
 
+	public List<Rezervacija> getRezervacije() {
+		return rezervacije;
+	}
+
+	public void setRezervacije(List<Rezervacija> rezervacije) {
+		this.rezervacije = rezervacije;
+	}
+
+	
 }

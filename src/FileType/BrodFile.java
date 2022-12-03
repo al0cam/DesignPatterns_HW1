@@ -26,12 +26,38 @@ public class BrodFile extends FileType {
                     Float.parseFloat(line[9]),
                     Float.parseFloat(line[10])
                 );
-                listOfObjects.add(b);
+                
+                
+                if(!brodFaulty(b, listOfObjects))
+                    listOfObjects.add(b);
+
             } catch (Exception e) {
                 ErrorCatcherSingleton.getInstance().catchLineError(line,e);
             }
         }
         list = listOfObjects;
+    }
+
+    boolean brodFaulty(Brod b, List<Brod> listOfObjects) throws Exception
+    {   
+        if(
+			b.getVrsta().equals("TR") || 
+			b.getVrsta().equals("KA") || 
+			b.getVrsta().equals("KL") || 
+			b.getVrsta().equals("KR") || 
+            b.getVrsta().equals("RI") || 
+			b.getVrsta().equals("TE") ||
+			b.getVrsta().equals("JA") || 
+			b.getVrsta().equals("RO") || 
+			b.getVrsta().equals("BR")
+        ){
+            for (Brod brod : listOfObjects) 
+                if(brod.getId().equals(b.getId()))
+                    throw new Exception("Brod Id already exists");
+        }
+        else throw new Exception("Brod vrsta is false");
+
+        return false;
     }
 
     @Override

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
+import models.Luka;
 import models.Vez;
+import store.StoreSingleton;
 
 public class VezFile extends FileType {
     private List<Vez> list;
@@ -22,13 +24,36 @@ public class VezFile extends FileType {
                     Integer.parseInt(line[5]),
                     Float.parseFloat(line[6])
                 );
-                // TODO: check if vez pase na luku ili je dublji/duzi/siri/stogod
-                listOfObjects.add(b);
+
+                if(!vezFaulty(b, listOfObjects))
+                    listOfObjects.add(b);
+               
             } catch (Exception e) {
                 ErrorCatcherSingleton.getInstance().catchLineError(line,e);
             }
         }
         list = listOfObjects;
+    }
+
+    boolean vezFaulty(Vez v, List<Vez> listOfObjects) throws Exception
+    {   
+        if(
+			v.getVrsta().equals("PU") || 
+			v.getVrsta().equals("PO") || 
+			v.getVrsta().equals("OS")
+        ){
+            for (Vez vez : listOfObjects) 
+                if(vez.getId().equals(v.getId()))
+                    throw new Exception("Vez Id already exists");
+        }
+        else throw new Exception("Vez vrsta is false");
+
+
+        Luka luka = StoreSingleton.getInstance().getLuke().get(0);
+        if(luka.getDubinaLuke() < v.getMaksimalnaDubina())
+            throw new Exception("Vez dubina: "+v.getMaksimalnaDubina()+"  is bigger than Luka dubina:"+luka.getDubinaLuke());
+            
+        return false;
     }
 
     @Override

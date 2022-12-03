@@ -20,19 +20,20 @@ public static ErrorCatcherSingleton errorCatcher;
 	public void catchLineError( String[] line, Exception e)
 	{
 		errorCount++;
-		System.out.println("Error count: " + errorCount + " Line: "+Arrays.toString(line)+" Cause: "+e.getMessage());
+		System.out.println("\nError count: " + errorCount + "\n  | Line: "+Arrays.toString(line)+"\n  | Cause: "+e.getMessage()+"\n");
+
 	}
 
 	public void catchCustomError( String error)
 	{
 		errorCount++;
-		System.out.println("Error count: " + errorCount + " Cause: "+error);
+		System.out.println("\nError count: " + errorCount + "\n  | Cause: "+error+"\n");
 	}
 
 	public void catchGeneralError(Exception e)
 	{
 		errorCount++;
-		System.out.println("Error count: " + errorCount +" Cause: "+e.getMessage());
+		System.out.println("\nError count: " + errorCount +"\n  | Cause: "+e.getMessage()+"\n");
 	}
 
 	public Integer getErrorCount()
