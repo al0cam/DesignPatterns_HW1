@@ -94,7 +94,7 @@ public class StoreSingleton {
 		{
 			// System.out.println("2");
 			for (Raspored raspored : rasporedi) {
-				if(raspored.getIdVez().equals(vez.getId()))
+				if(raspored.getVez().equals(vez))
 				{
 					if(zauzetoURasporedu(vez,time,raspored))
 						return true;
@@ -116,7 +116,7 @@ public class StoreSingleton {
 		{
 			// System.out.println("else 1");
 			for (Raspored raspored : rasporedi) 
-				if(raspored.getIdVez().equals(vez.getId()))
+				if(raspored.getVez().equals(vez))
 				{
 					if(zauzetoURasporedu(vez,time,raspored))
 						return true;
@@ -204,6 +204,16 @@ public class StoreSingleton {
 		return slobodniVezovi;
 	}
 
+	public List<Vez> pronadjiZauzeteVezove(LocalDateTime time)
+	{
+		List<Vez> zauzetiVezovi = new ArrayList<>();
+		for (Vez vez : vezovi) 
+			if(vezZauzetUVrijeme(vez, time))
+				zauzetiVezovi.add(vez);
+
+		return zauzetiVezovi;
+	}
+
 	private boolean vrstaBrodaOdgovaraVrstiVeza(Brod brod, Vez vez)
 	{
 		if(
@@ -249,6 +259,20 @@ public class StoreSingleton {
 		return brod;
 	}
 
+	public Vez getVezById(Integer id) throws Exception
+	{
+		Vez brod = null;
+		for (Vez bro : vezovi) {
+			if(bro.getId().equals(id))
+				brod = bro;
+		}
+
+		if(brod == null)
+			throw new Exception("No vez with id "+id);
+		
+		return brod;
+	}
+
 	public Rezervacija pretvoriZahtjevURezervaciju(ZahtjevRezervacije zahtjevRezervacije)
 	{
 		try {
@@ -285,6 +309,7 @@ public class StoreSingleton {
 			if(rezervacija != null)
 				rezervacije.add(rezervacija);
 		}
+		zahtjeviRezervacija.clear();
 	}
 
 	public void novaRezervacija(Integer idBrod, Integer trajanjeUSatima)
@@ -294,17 +319,31 @@ public class StoreSingleton {
 		);
 		
 		if(rezervacija != null)
-			System.out.println("Kreiran je zahtjev");
+		{
+			rezervacije.add(rezervacija);
+			System.out.println("Kreiran je zahtjev za brod: "+rezervacija.getBrod().getId()+ " za vez: "+rezervacija.getVez().getId()+ " od: "+timeToString(rezervacija.getDatumVrijemeOd()) + " do: "+timeToString(rezervacija.getDatumVrijemeDo()));
+		}
 		else
-			System.out.println("Nije kreiran zahtjev");
+			System.out.println("Nije kreiran zahtjev za brod: "+idBrod);
 	}
 
-
-	// TODO: napisat logiku, neki print il nest
-
-	public void priveziBrodSRezervacijom()
+	public void priveziBrodSRezervacijom(Integer idBrod)
 	{
-
+		try {
+			Brod brod = getBrodById(idBrod);
+			System.out.println(brod.getId());
+			for (Raspored raspored : rasporedi) {
+				if(raspored.getBrod().equals(brod) && zauzetoURasporedu(raspored.getVez(), VirtualTimeSingleton.getInstance().getVirtualtime(), raspored))
+				{
+					System.out.println("Brod: "+ brod.getId()+" privezan za vez: "+raspored.getVez().getId());
+					return;
+				}
+			}
+		} catch (Exception e) {
+			ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+			return;
+		}
+		System.out.println("Brod: "+ idBrod+" nema rezervaciju");
 	}
 
 	public List<Brod> getBrodovi() {

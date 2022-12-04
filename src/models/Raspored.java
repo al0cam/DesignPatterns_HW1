@@ -5,32 +5,21 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class Raspored {
-    private Integer idVez;
-    private Integer idBrod;
+    private Vez vez;
+    private Brod brod;
     private List<DayOfWeek> daniUtjednu;
     private LocalTime vrijemeOd;
     private LocalTime vrijemeDo;
 
-    public Raspored(Integer idVez, Integer idBrod, List<DayOfWeek> daniUtjednu, LocalTime vrijemeOd,
-            LocalTime vrijemeDo) {
-        this.idVez = idVez;
-        this.idBrod = idBrod;
+   
+    
+    
+    public Raspored(Vez vez, Brod brod, List<DayOfWeek> daniUtjednu, LocalTime vrijemeOd, LocalTime vrijemeDo) {
+        this.vez = vez;
+        this.brod = brod;
         this.daniUtjednu = daniUtjednu;
         this.vrijemeOd = vrijemeOd;
         this.vrijemeDo = vrijemeDo;
-    }
-
-    public Integer getIdVez() {
-        return idVez;
-    }
-    public void setIdVez(Integer idVez) {
-        this.idVez = idVez;
-    }
-    public Integer getIdBrod() {
-        return idBrod;
-    }
-    public void setIdBrod(Integer idBrod) {
-        this.idBrod = idBrod;
     }
     public List<DayOfWeek> getDaniUtjednu() {
         return daniUtjednu;
@@ -49,6 +38,18 @@ public class Raspored {
     }
     public void setVrijemeDo(LocalTime vrijemeDo) {
         this.vrijemeDo = vrijemeDo;
+    }
+    public Vez getVez() {
+        return vez;
+    }
+    public void setVez(Vez vez) {
+        this.vez = vez;
+    }
+    public Brod getBrod() {
+        return brod;
+    }
+    public void setBrod(Brod brod) {
+        this.brod = brod;
     }
 
 

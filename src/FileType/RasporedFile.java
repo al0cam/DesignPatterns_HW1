@@ -29,8 +29,8 @@ public class RasporedFile extends FileType {
                 }
 
                 Raspored b = new Raspored(
-                    Integer.parseInt(line[0]),
-                    Integer.parseInt(line[1]),
+                    StoreSingleton.getInstance().getVezById(Integer.parseInt(line[0])),
+                    StoreSingleton.getInstance().getBrodById(Integer.parseInt(line[1])),
                     daniUTjednuInt,
                     LocalTime.parse(line[3].trim(),DateTimeFormatter.ofPattern("H:mm")),
                     LocalTime.parse(line[4].trim(),DateTimeFormatter.ofPattern("H:mm"))
@@ -50,25 +50,25 @@ public class RasporedFile extends FileType {
         boolean vezExists = false;
 
         for (Brod brod : StoreSingleton.getInstance().getBrodovi()) 
-            if(brod.getId().equals(b.getIdBrod()))
+            if(brod.getId().equals(b.getBrod().getId()))
             {
                 brodExists = true;
                 break;
             }
 
         for (Vez vez : StoreSingleton.getInstance().getVezovi()) 
-            if(vez.getId().equals(b.getIdVez()))
+            if(vez.getId().equals(b.getVez().getId()))
             {
                 vezExists = true;
                 break;
             }
 
         if(!brodExists && !vezExists)
-            throw new Exception("Vez: "+b.getIdVez()+" and brod: "+b.getIdBrod()+" dont exist");
+            throw new Exception("Vez: "+b.getVez().getId()+" and brod: "+b.getBrod().getId()+" dont exist");
         else if(brodExists && !vezExists)
-            throw new Exception("Vez: "+b.getIdVez()+" doesnt exist");
+            throw new Exception("Vez: "+b.getVez().getId()+" doesnt exist");
         else if(vezExists && !brodExists)
-            throw new Exception("Brod: "+b.getIdBrod()+" doesnt exist");
+            throw new Exception("Brod: "+b.getBrod().getId()+" doesnt exist");
         else return false;
     }
 
