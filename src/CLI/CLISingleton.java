@@ -50,6 +50,7 @@ public static CLISingleton cliSingleton;
 
             if (matcher.matches()) {
                 VirtualTimeSingleton.getInstance().passTime();
+                System.out.println();
                 work = executeCommand(matcher);
             }
             else {

@@ -331,11 +331,18 @@ public class StoreSingleton {
 	{
 		try {
 			Brod brod = getBrodById(idBrod);
-			System.out.println(brod.getId());
 			for (Raspored raspored : rasporedi) {
 				if(raspored.getBrod().equals(brod) && zauzetoURasporedu(raspored.getVez(), VirtualTimeSingleton.getInstance().getVirtualtime(), raspored))
 				{
 					System.out.println("Brod: "+ brod.getId()+" privezan za vez: "+raspored.getVez().getId());
+					return;
+				}
+			}
+			for (Rezervacija rezervacija : rezervacije) {
+				if(rezervacija.getBrod().equals(brod) &&
+					isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), VirtualTimeSingleton.getInstance().getVirtualtime()) 
+				){
+					System.out.println("Brod: "+ brod.getId()+" privezan za vez: "+rezervacija.getVez().getId());
 					return;
 				}
 			}
