@@ -28,24 +28,30 @@ public class Main {
 
 		Matcher matcher = pattern.matcher(joinedArgs);
 
-		if(matcher.matches() && args.length == 6)
-		{
-			if(
-				findFile(matcher.group("arg1"),matcher.group("file1")) &&
-				findFile(matcher.group("arg2"),matcher.group("file2")) &&
-				findFile(matcher.group("arg3"),matcher.group("file3")) 
-			)
-			{
-				CLISingleton.getInstance().commandInterpreter();
-			}
-		}
-		else if((matcher.matches() && args.length == 8))
+		if(matcher.matches() && args.length == 12)
 		{
 			if(
 				findFile(matcher.group("arg1"),matcher.group("file1")) &&
 				findFile(matcher.group("arg2"),matcher.group("file2")) &&
 				findFile(matcher.group("arg3"),matcher.group("file3")) &&
-				findFile(matcher.group("arg4"),matcher.group("file4")) 
+				findFile(matcher.group("arg4"),matcher.group("file4")) &&
+				findFile(matcher.group("arg5"),matcher.group("file5")) &&
+				findFile(matcher.group("arg6"),matcher.group("file6")) 
+			)
+			{
+				CLISingleton.getInstance().commandInterpreter();
+			}
+		}
+		else if((matcher.matches() && args.length == 14))
+		{
+			if(
+				findFile(matcher.group("arg1"),matcher.group("file1")) &&
+				findFile(matcher.group("arg2"),matcher.group("file2")) &&
+				findFile(matcher.group("arg3"),matcher.group("file3")) &&
+				findFile(matcher.group("arg4"),matcher.group("file4")) &&
+				findFile(matcher.group("arg5"),matcher.group("file5")) &&
+				findFile(matcher.group("arg6"),matcher.group("file6")) &&
+				findFile(matcher.group("arg7"),matcher.group("file7"))
 			)
 			{
 				CLISingleton.getInstance().commandInterpreter();
@@ -87,6 +93,27 @@ public class Main {
 			case "-r":
 				try {
 					StoreSingleton.getInstance().rasporedi = csvReaderFactory.readFromCSV(fileName);
+				} catch (Exception e) {
+					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+				}
+				return true;
+			case "-m":
+				try {
+					StoreSingleton.getInstance().molovi = csvReaderFactory.readFromCSV(fileName);
+				} catch (Exception e) {
+					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+				}
+				return true;
+			case "-k":
+				try {
+					StoreSingleton.getInstance().molovi = csvReaderFactory.readFromCSV(fileName);
+				} catch (Exception e) {
+					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+				}
+				return true;
+			case "-mv":
+				try {
+					StoreSingleton.getInstance().loadMolVez(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 				}

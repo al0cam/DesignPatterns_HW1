@@ -1,6 +1,5 @@
 package store;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +8,10 @@ import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
 import models.Brod;
+import models.Kanal;
 import models.Luka;
+import models.Mol;
+import models.MolVez;
 import models.Raspored;
 import models.Rezervacija;
 import models.Vez;
@@ -22,6 +24,8 @@ public class StoreSingleton {
     public List<Luka> luke;
     public List<Raspored> rasporedi;
     public List<Vez> vezovi;
+    public List<Mol> molovi;
+    public List<Kanal> kanali;
     public List<ZahtjevRezervacije> zahtjeviRezervacija = new ArrayList<>();
     public List<Rezervacija> rezervacije = new ArrayList<>();
 
@@ -35,15 +39,6 @@ public class StoreSingleton {
 		}
 		return store;
 	}
-
-	
-	// provjera je li vez zauzet u odredjeno doba >> DONE 
-	// TODO: stvaranje rezervacije ako je vez slobodan u zahtjevano vrijeme >> DONE ALI TREBA TEST
-	// TODO: vezanje broda za vez koji je rezervirao >> VALDJA DONE JER
-	//  NEMA NIGDJE ZAPRAVO OPCIJA DA JE BROD ZAVEZAN OSIM DA JE VEZ ZAUZET
-	// TODO: zahtjev za privez ako je brod rezervirao vez >>> rezultat je samo notification koji kaze jel privezano il ne
-	// TODO: zahtjev za privez ako brod nema rezervaciju, stvaranje rezervacije za vez 
-
 
 	public String timeToString(LocalDateTime time)
 	{
@@ -87,12 +82,10 @@ public class StoreSingleton {
 	{
 		if(rezervacijeEmpty() && rasporedEmpty())
 		{
-			System.out.println("ALL EMPTY");
 			return false;
 		}
 		else if(rezervacijeEmpty())
 		{
-			// System.out.println("2");
 			for (Raspored raspored : rasporedi) {
 				if(raspored.getVez().equals(vez))
 				{
@@ -103,7 +96,6 @@ public class StoreSingleton {
 		}
 		else if(rasporedEmpty())
 		{
-			// System.out.println("3");
 			for (Rezervacija rezervacija : rezervacije) {
 				if(rezervacija.getVez().equals(vez))
 				{
@@ -114,7 +106,6 @@ public class StoreSingleton {
 		}
 		else
 		{
-			// System.out.println("else 1");
 			for (Raspored raspored : rasporedi) 
 				if(raspored.getVez().equals(vez))
 				{
@@ -123,76 +114,17 @@ public class StoreSingleton {
 				}
 			
 
-			// System.out.println("else 2");
 			for (Rezervacija rezervacija : rezervacije) 
 				if(rezervacija.getVez().equals(vez))
 				{
-					// System.out.println("else 2 vez == vez");
 					if(isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time))
 					{
-						// System.out.println("else 2 if");
 						return true;
 					}
 				}
 		}
 		return false;
 	}
-
-	// TODO: vez zauzet od do uz ispis do kad je zauzet
-
-	// public boolean vezZauzetOdDo(Vez vez, LocalDateTime vrijemeOd, LocalDateTime vrijemeDo)
-	// {
-	// 	if(rezervacijeEmpty() && rasporedEmpty())
-	// 	{
-	// 		return false;
-	// 	}
-	// 	else if(rezervacijeEmpty())
-	// 	{
-	// 		// System.out.println("2");
-	// 		for (Raspored raspored : rasporedi) {
-	// 			if(raspored.getIdVez().equals(vez.getId()))
-	// 			{
-	// 				if(zauzetoURasporedu(vez,time,raspored))
-	// 					return true;
-	// 			}
-	// 		}
-	// 	}
-	// 	else if(rasporedEmpty())
-	// 	{
-	// 		// System.out.println("3");
-	// 		for (Rezervacija rezervacija : rezervacije) {
-	// 			if(rezervacija.getVez().equals(vez))
-	// 			{
-	// 				if(isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time))
-	// 					return true;
-	// 			}
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		// System.out.println("else 1");
-	// 		for (Raspored raspored : rasporedi) 
-	// 			if(raspored.getIdVez().equals(vez.getId()))
-	// 			{
-	// 				if(zauzetoURasporedu(vez,time,raspored))
-	// 					return true;
-	// 			}
-			
-
-	// 		// System.out.println("else 2");
-	// 		for (Rezervacija rezervacija : rezervacije) 
-	// 			if(rezervacija.getVez().equals(vez))
-	// 			{
-	// 				// System.out.println("else 2 vez == vez");
-	// 				if(isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), time))
-	// 				{
-	// 					// System.out.println("else 2 if");
-	// 					return true;
-	// 				}
-	// 			}
-	// 	}
-	// 	return false;
-	// }
 
 	public List<Vez> pronadjiSlobodneVezove(LocalDateTime time)
 	{
@@ -247,30 +179,20 @@ public class StoreSingleton {
 
 	public Brod getBrodById(Integer id) throws Exception
 	{
-		Brod brod = null;
-		for (Brod bro : brodovi) {
+		for (Brod bro : brodovi) 
 			if(bro.getId().equals(id))
-				brod = bro;
-		}
+				return bro;
 
-		if(brod == null)
-			throw new Exception("No brod with id "+id);
-		
-		return brod;
+		throw new Exception("No brod with id: "+id);
 	}
 
 	public Vez getVezById(Integer id) throws Exception
 	{
-		Vez brod = null;
-		for (Vez bro : vezovi) {
-			if(bro.getId().equals(id))
-				brod = bro;
-		}
+		for (Vez vez : vezovi)
+			if(vez.getId().equals(id))
+				return vez;
 
-		if(brod == null)
-			throw new Exception("No vez with id "+id);
-		
-		return brod;
+		throw new Exception("No vez with id: "+id);
 	}
 
 	public Rezervacija pretvoriZahtjevURezervaciju(ZahtjevRezervacije zahtjevRezervacije)
@@ -353,6 +275,29 @@ public class StoreSingleton {
 		System.out.println("Brod: "+ idBrod+" nema rezervaciju");
 	}
 
+	private Mol getMolById(Integer id) throws Exception
+	{
+		for (Mol mol : molovi) 
+			if(mol.getId().equals(id))
+				return mol;
+
+		throw new Exception("No mol with id: "+id);
+	}
+
+	public void loadMolVez(List<MolVez> molVezovi)
+	{
+		for (MolVez molVez : molVezovi) {
+			try {
+				Mol mol = getMolById(molVez.getMol());
+				for (Integer idVez : molVez.getVezovi()) {
+					mol.addVez(getVezById(idVez));
+				}
+			} catch (Exception e) {
+				ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+			}
+		}
+	}
+
 	public List<Brod> getBrodovi() {
 		return brodovi;
 	}
@@ -402,5 +347,19 @@ public class StoreSingleton {
 		this.rezervacije = rezervacije;
 	}
 
-	
+	public List<Mol> getMolovi() {
+		return molovi;
+	}
+
+	public void setMolovi(List<Mol> molovi) {
+		this.molovi = molovi;
+	}
+
+	public List<Kanal> getKanali() {
+		return kanali;
+	}
+
+	public void setKanali(List<Kanal> kanali) {
+		this.kanali = kanali;
+	}
 }

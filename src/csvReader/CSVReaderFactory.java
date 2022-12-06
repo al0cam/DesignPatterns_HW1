@@ -9,7 +9,10 @@ import java.util.List;
 import ErrorCatcher.ErrorCatcherSingleton;
 import FileType.BrodFile;
 import FileType.FileType;
+import FileType.KanalFile;
 import FileType.LukaFile;
+import FileType.MolFile;
+import FileType.MolVezFile;
 import FileType.RasporedFile;
 import FileType.VezFile;
 import FileType.ZahtjevRezervacijeFile;
@@ -49,6 +52,12 @@ public class CSVReaderFactory {
                 fileType = new VezFile(fileContent);
             else if(isZahtjevRezervacijeFile(firstLine))
                 fileType = new ZahtjevRezervacijeFile(fileContent);
+            else if(isZahtjevMolFile(firstLine))
+                fileType = new MolFile(fileContent);
+            else if(isZahtjevKanalFile(firstLine))
+                fileType = new KanalFile(fileContent);
+            else if(isZahtjevMolVezFile(firstLine))
+                fileType = new MolVezFile(fileContent);
 		}
 		catch (IOException e) {
             ErrorCatcherSingleton.getInstance().catchGeneralError(e);
@@ -81,6 +90,21 @@ public class CSVReaderFactory {
     private boolean isZahtjevRezervacijeFile(String[] firstRow)
     {
         return splitAndCompare(firstRow,"id_brod;datum_vrijeme_od;trajanje_priveza_u_h");
+    }
+
+    private boolean isZahtjevMolFile(String[] firstRow)
+    {
+        return splitAndCompare(firstRow,"idKanal;frekvencija;maksimalanBroj");
+    }
+
+    private boolean isZahtjevKanalFile(String[] firstRow)
+    {
+        return splitAndCompare(firstRow,"id_brod;datum_vrijeme_od;trajanje_priveza_u_h");
+    }
+
+    private boolean isZahtjevMolVezFile(String[] firstRow)
+    {
+        return splitAndCompare(firstRow,"id_mol;id_vezovi");
     }
 
     private boolean splitAndCompare(String[] firstRow, String idRow)

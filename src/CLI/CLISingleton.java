@@ -95,17 +95,7 @@ public static CLISingleton cliSingleton;
             break;
 
             case "Q":{
-
-                for (Raspored raspored : StoreSingleton.getInstance().getRasporedi()) {
-                    System.out.println(raspored.getVez().getId() + " brod: "+ raspored.getBrod().getId()+  " dani: "+ raspored.getDaniUtjednu()+ " od:"+raspored.getVrijemeOd()+" do: " + raspored.getVrijemeDo()) ;
-                }
-
-
-                System.out.println("\nRezervacije:");
-                for (Rezervacija rezervacija: StoreSingleton.getInstance().getRezervacije()) {
-                    System.out.println(rezervacija.getVez().getId() + " brod: "+ rezervacija.getBrod().getId()+  " od: "+ rezervacija.getDatumVrijemeOd()+ "do: " + rezervacija.getDatumVrijemeDo()) ;
-                }
-                // return false;
+                return false;
             }
         }
         return true;
@@ -147,9 +137,9 @@ public static CLISingleton cliSingleton;
             ErrorCatcherSingleton.getInstance().catchGeneralError(e);
         }
 
-        System.out.println("LIST");
+        System.out.println("Ucitani zapisi");
         for (Rezervacija rezervacija : StoreSingleton.getInstance().getRezervacije()) {
-            System.out.println(rezervacija.getBrod().getId() +" " + rezervacija.getVez().getId() +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeOd()) +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeDo()));
+            System.out.println("Brod: "+rezervacija.getBrod().getId() +" Vez:" + rezervacija.getVez().getId() +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeOd()) +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeDo()));
         }
     }
 
