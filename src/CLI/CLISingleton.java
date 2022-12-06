@@ -56,6 +56,7 @@ public static CLISingleton cliSingleton;
             "(Q$))"
             );
 
+            // TODO: slozit chain of responsibility koji crta brodove prema vrsti a uzima id broda kao arg tj objekt broda
         boolean work = true;
         while(work)
         {
