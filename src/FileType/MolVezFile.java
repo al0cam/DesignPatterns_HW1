@@ -9,13 +9,12 @@ import models.MolVez;
 public class MolVezFile extends FileType {
     private List<MolVez> list;
 
-    public MolVezFile(List<String[]> fileContent) {
+    public MolVezFile(String path, List<String[]> fileContent) {
         List<MolVez> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
             try {
                 List<Integer> vezovi = new ArrayList<>();
-                System.out.println(line[2]);
-                for (String vez : line[2].split("[,]")) {
+                for (String vez : line[1].split("[.]")) {
                     vezovi.add(Integer.parseInt(vez));
                 }
                 MolVez MolVez = new MolVez(
@@ -26,7 +25,7 @@ public class MolVezFile extends FileType {
                     listOfObjects.add(MolVez);
                
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
             }
         }
         list = listOfObjects;
@@ -40,7 +39,7 @@ public class MolVezFile extends FileType {
             
             for (Integer vez : molVez2.getVezovi()) 
                 if(molVez.getVezovi().contains(vez))
-                    throw new Exception("Vez cant be in multiple Mols at once");
+                    throw new Exception("Vez: "+vez+" cant be in multiple Mols at once");
         }
 
         return false;

@@ -17,10 +17,10 @@ public static ErrorCatcherSingleton errorCatcher;
 		return errorCatcher;
 	}
 
-	public void catchLineError( String[] line, Exception e)
+	public void catchLineError(String fileName, String[] line, Exception e)
 	{
 		errorCount++;
-		System.out.println("\nError count: " + errorCount + "\n  | Line: "+Arrays.toString(line)+"\n  | Cause: "+e.getMessage()+"\n");
+		System.out.println("\nError count: " + errorCount+"\n  | File: "+fileName + "\n  | Line: "+Arrays.toString(line)+"\n  | Cause: "+e.getMessage()+"\n");
 
 	}
 

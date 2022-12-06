@@ -12,15 +12,22 @@ public class Main {
 
 	public static void main(String[] args) {
 		Pattern pattern = Pattern.compile(
-			"((?<arg1>-[lbrv]) (?<file1>\\w+\\.csv) ?)((?<arg2>-[lbrv]) (?<file2>\\w+\\.csv) ?)((?<arg3>-[lbrv]) (?<file3>\\w+\\.csv) ?)((?<arg4>-[lbrv]) (?<file4>\\w+\\.csv) ?)?"
+			"((?<arg1>-[lbrkmv]{1,2}) (?<file1>\\w+\\.csv) ?)((?<arg2>-[lbrkmv]{1,2}) (?<file2>\\w+\\.csv) ?)((?<arg3>-[lbrkmv]{1,2}) (?<file3>\\w+\\.csv) ?)((?<arg4>-[lbrkmv]{1,2}) (?<file4>\\w+\\.csv) ?)((?<arg5>-[lbrkmv]{1,2}) (?<file5>\\w+\\.csv) ?)((?<arg6>-[lbrkmv]{1,2}) (?<file6>\\w+\\.csv) ?)((?<arg7>-[lbrkmv]{1,2}) (?<file7>\\w+\\.csv) ?)?"
 			);
 		String joinedArgs = String.join(" ",args);
-		if(args.length < 6)
+		if(args.length < 12)
 		{
 			ErrorCatcherSingleton.getInstance().catchCustomError("ERROR not enough arguments provided");
 			return;
 		}
-		else if(!joinedArgs.contains("-l") || !joinedArgs.contains("-b") || !joinedArgs.contains("-v"))
+		else if(
+			!joinedArgs.contains("-l") || 
+			!joinedArgs.contains("-b") || 
+			!joinedArgs.contains("-v") ||
+			!joinedArgs.contains("-k") ||
+			!joinedArgs.contains("-m") ||
+			!joinedArgs.contains("-mv")
+		)
 		{
 			ErrorCatcherSingleton.getInstance().catchCustomError("ERROR missing mandatory arguments");
 			return;
@@ -102,13 +109,15 @@ public class Main {
 					StoreSingleton.getInstance().molovi = csvReaderFactory.readFromCSV(fileName);
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					return false;
 				}
 				return true;
 			case "-k":
 				try {
-					StoreSingleton.getInstance().molovi = csvReaderFactory.readFromCSV(fileName);
+					StoreSingleton.getInstance().kanali = csvReaderFactory.readFromCSV(fileName);
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					return false;
 				}
 				return true;
 			case "-mv":
@@ -116,6 +125,7 @@ public class Main {
 					StoreSingleton.getInstance().loadMolVez(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					return false;
 				}
 				return true;
 			default:

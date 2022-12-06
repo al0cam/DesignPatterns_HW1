@@ -11,7 +11,7 @@ import models.Luka;
 public class LukaFile extends FileType {
     private List<Luka> list;
 
-    public LukaFile(List<String[]> fileContent) {
+    public LukaFile(String path, List<String[]> fileContent) {
         List<Luka> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
             try {
@@ -27,7 +27,7 @@ public class LukaFile extends FileType {
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
             }
         }
         list = listOfObjects;

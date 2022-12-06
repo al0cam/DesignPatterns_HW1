@@ -11,7 +11,7 @@ import models.ZahtjevRezervacije;
 public class ZahtjevRezervacijeFile extends FileType {
     private List<ZahtjevRezervacije> list;
 
-    public ZahtjevRezervacijeFile(List<String[]> fileContent) {
+    public ZahtjevRezervacijeFile(String path, List<String[]> fileContent) {
         List<ZahtjevRezervacije> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
             try {
@@ -22,7 +22,7 @@ public class ZahtjevRezervacijeFile extends FileType {
                 );
                 listOfObjects.add(b);
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
             }
         }
         list = listOfObjects;

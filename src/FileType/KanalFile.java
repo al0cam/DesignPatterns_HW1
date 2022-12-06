@@ -9,7 +9,7 @@ import models.Kanal;
 public class KanalFile extends FileType {
     private List<Kanal> list;
 
-    public KanalFile(List<String[]> fileContent) {
+    public KanalFile(String path, List<String[]> fileContent) {
         List<Kanal> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
             try {
@@ -19,10 +19,10 @@ public class KanalFile extends FileType {
                     Integer.parseInt(line[2])
                 );
                 if(!kanalFaulty(kanal, listOfObjects))
-                listOfObjects.add(kanal);
+                    listOfObjects.add(kanal);
                
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
             }
         }
         list = listOfObjects;
@@ -32,7 +32,12 @@ public class KanalFile extends FileType {
     {   
         if(listOfObjects.contains(kanal))
             throw new Exception("Kanal Id already exists");
-        else return false;
+        
+        for (Kanal kanal2 : listOfObjects) 
+            if(kanal2.getFrekvencija().equals(kanal.getFrekvencija()))
+                throw new Exception("Kanal frekvencija already in use");
+        
+        return false;
     }
 
     @Override

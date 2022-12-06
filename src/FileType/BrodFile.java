@@ -9,7 +9,7 @@ import models.Brod;
 public class BrodFile extends FileType {
     private List<Brod> list;
 
-    public BrodFile(List<String[]> fileContent) {
+    public BrodFile(String path, List<String[]> fileContent) {
         List<Brod> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
             try {
@@ -32,7 +32,7 @@ public class BrodFile extends FileType {
                     listOfObjects.add(b);
 
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError("Brod", line,e);
             }
         }
         list = listOfObjects;

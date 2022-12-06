@@ -15,7 +15,7 @@ import store.StoreSingleton;
 public class RasporedFile extends FileType {
     private List<Raspored> list;
 
-    public RasporedFile(List<String[]> fileContent) {
+    public RasporedFile(String path, List<String[]> fileContent) {
         List<Raspored> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
             try {
@@ -38,7 +38,7 @@ public class RasporedFile extends FileType {
                 if(!rasporedFaulty(b))
                     listOfObjects.add(b);
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
             }
         }
         list = listOfObjects;

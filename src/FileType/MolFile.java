@@ -9,7 +9,7 @@ import models.Mol;
 public class MolFile extends FileType {
     private List<Mol> list;
 
-    public MolFile(List<String[]> fileContent) {
+    public MolFile(String path, List<String[]> fileContent) {
         List<Mol> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
             try {
@@ -20,7 +20,7 @@ public class MolFile extends FileType {
                 listOfObjects.add(b);
                
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
             }
         }
         list = listOfObjects;

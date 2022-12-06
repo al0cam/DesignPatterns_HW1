@@ -11,7 +11,7 @@ import store.StoreSingleton;
 public class VezFile extends FileType {
     private List<Vez> list;
 
-    public VezFile(List<String[]> fileContent) {
+    public VezFile(String path, List<String[]> fileContent) {
         List<Vez> listOfObjects = new ArrayList<>();
         for (String[] line : fileContent) {
             try {
@@ -29,7 +29,7 @@ public class VezFile extends FileType {
                     listOfObjects.add(b);
                
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(line,e);
+                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
             }
         }
         list = listOfObjects;

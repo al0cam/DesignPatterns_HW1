@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
@@ -43,21 +44,21 @@ public class CSVReaderFactory {
 			}
 
             if(isBrodFile(firstLine))
-                fileType = new BrodFile(fileContent);
+                fileType = new BrodFile(path, fileContent);
             else if(isLukaFile(firstLine))
-                fileType = new LukaFile(fileContent);
+                fileType = new LukaFile(path, fileContent);
             else if(isRasporedFile(firstLine))
-                fileType = new RasporedFile(fileContent);
+                fileType = new RasporedFile(path, fileContent);
             else if(isVezFile(firstLine))
-                fileType = new VezFile(fileContent);
+                fileType = new VezFile(path, fileContent);
             else if(isZahtjevRezervacijeFile(firstLine))
-                fileType = new ZahtjevRezervacijeFile(fileContent);
+                fileType = new ZahtjevRezervacijeFile(path, fileContent);
             else if(isZahtjevMolFile(firstLine))
-                fileType = new MolFile(fileContent);
+                fileType = new MolFile(path, fileContent);
             else if(isZahtjevKanalFile(firstLine))
-                fileType = new KanalFile(fileContent);
+                fileType = new KanalFile(path, fileContent);
             else if(isZahtjevMolVezFile(firstLine))
-                fileType = new MolVezFile(fileContent);
+                fileType = new MolVezFile(path, fileContent);
 		}
 		catch (IOException e) {
             ErrorCatcherSingleton.getInstance().catchGeneralError(e);
@@ -94,12 +95,12 @@ public class CSVReaderFactory {
 
     private boolean isZahtjevMolFile(String[] firstRow)
     {
-        return splitAndCompare(firstRow,"idKanal;frekvencija;maksimalanBroj");
+        return splitAndCompare(firstRow,"id_mol;naziv");
     }
 
     private boolean isZahtjevKanalFile(String[] firstRow)
     {
-        return splitAndCompare(firstRow,"id_brod;datum_vrijeme_od;trajanje_priveza_u_h");
+        return splitAndCompare(firstRow,"idKanal;frekvencija;maksimalanBroj");
     }
 
     private boolean isZahtjevMolVezFile(String[] firstRow)

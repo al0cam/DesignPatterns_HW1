@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;
-import models.Raspored;
 import models.Rezervacija;
 import models.Vez;
 import store.StoreSingleton;
@@ -15,6 +14,11 @@ import virtualTime.VirtualTimeSingleton;
 
 public class CLISingleton {
 public static CLISingleton cliSingleton;
+    private boolean header = false;
+    private boolean footer = false;
+    private boolean ordinalNumbers = false;
+
+
 
 	private CLISingleton(){}
 
@@ -29,6 +33,15 @@ public static CLISingleton cliSingleton;
 
     public void commandInterpreter()
     {
+        // Pattern pattern = Pattern.compile(
+        //     "(?<bigGroup>(I$)|"+
+        //     "(VR (?<datumIVrijeme>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
+        //     "(V (?<vrstaVeza>[A-Z]{2}) (?<status>[A-Z]) (?<datumVrijemeOd>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9]) (?<datumVrijemeDo>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
+        //     "(UR (?<nazivDatoteke>\\w+\\.csv)$)|"+
+        //     "(ZD (?<idBrodZD>\\d+)$)|"+
+        //     "(ZP (?<idBrodZP>\\d+) (?<trajanjeUSatima>\\d+)$)|"+
+        //     "(Q$))"
+        //     );
         Pattern pattern = Pattern.compile(
             "(?<bigGroup>(I$)|"+
             "(VR (?<datumIVrijeme>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
@@ -36,6 +49,10 @@ public static CLISingleton cliSingleton;
             "(UR (?<nazivDatoteke>\\w+\\.csv)$)|"+
             "(ZD (?<idBrodZD>\\d+)$)|"+
             "(ZP (?<idBrodZP>\\d+) (?<trajanjeUSatima>\\d+)$)|"+
+            "(F (?<idBrodF>\\d+) (?<kanal>\\d+)$)|"+
+            "(T(?<option1> [ZPRB]{1,2})?(?<option2> [ZPRB]{1,2})?(?<option3> [ZPRB]{12})?$)|"+
+            "(ZA (?<datumVrijmeZA>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. [0-2]\\d\\:[0-5][0-9])$)|"+
+            "(C (?<idBrodC>\\d+)$)|"+
             "(Q$))"
             );
 
@@ -103,20 +120,28 @@ public static CLISingleton cliSingleton;
 
     private void statusVezova()
     {
+        System.out.println(String.format("%130s","").replace(" ","_"));
+        System.out.println("\nTablica - Ispis statusa vezova u trenutno vrijeme");
+        System.out.println(String.format("%130s","").replace(" ","_"));
         System.out.println(
-            String.format("%1$-5s | %2$-7s |  %3$-5s |  %4$-20s |  %5$-20s | %6$-20s | %7$-20s | %8$-10s",
+            String.format(
+                "%1$5s | %2$-7s |  %3$-5s |  %4$20s |  %5$20s | %6$20s | %7$20s | %8$-10s",
                 "id","oznaka","vrsta","cijenaVezaPoSatu","maksimalnaDuljina","maksimalnaSirina","maksimalnaDubina","zauzet"
             )
         );
         for (Vez vez : StoreSingleton.getInstance().getVezovi()) {
             System.out.println(
-            String.format("%1$-5s | %2$-7s |  %3$-5s |  %4$-20s |  %5$-20s | %6$-20s | %7$-20s | %8$-10s",
+            String.format(
+                "%1$5s | %2$-7s |  %3$-5s |  %4$20s |  %5$20s | %6$20s | %7$20s | %8$-10s",
                 vez.getId(),vez.getOznaka(),vez.getVrsta(),vez.getCijenaVezaPoSatu(),
                 vez.getMaksimalnaDuljina(),vez.getMaksimalnaSirina(),vez.getMaksimalnaDubina(),
                 StoreSingleton.getInstance().vezZauzetUVrijeme(vez, VirtualTimeSingleton.getInstance().getVirtualtime())
             )
         );
         }
+        System.out.println(String.format("%130s","").replace(" ","_"));
+        System.out.println("\nTotal: "+StoreSingleton.getInstance().getVezovi().size());
+        System.out.println(String.format("%130s","").replace(" ","_"));
     }
 
     private void postaviVirtualnoVrijeme(String vrijemeIDatum)
