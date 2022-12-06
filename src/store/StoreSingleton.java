@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
+import Vrsta.Trajekt;
+import Vrsta.VrstaHandler;
 import models.Brod;
 import models.Kanal;
 import models.Luka;
@@ -296,6 +298,19 @@ public class StoreSingleton {
 				ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 			}
 		}
+	}
+
+
+	public void crtajBrod(Integer idBrod)
+	{
+		try {
+			Brod brod = getBrodById(idBrod);
+			VrstaHandler handler = Trajekt.getInstance();
+			handler.handle(brod);
+		} catch (Exception e) {
+			ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+		}
+
 	}
 
 	public List<Brod> getBrodovi() {

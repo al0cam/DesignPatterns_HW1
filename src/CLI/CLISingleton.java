@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ErrorCatcher.ErrorCatcherSingleton;
+import Vrsta.Trajekt;
+import Vrsta.VrstaHandler;
 import csvReader.CSVReaderFactory;
 import models.Rezervacija;
 import models.Vez;
@@ -112,6 +114,23 @@ public static CLISingleton cliSingleton;
             }
             break;
 
+            case "F":{
+            }
+            break;
+
+            case "T":{
+            }
+            break;
+
+            case "ZA":{
+            }
+            break;
+
+            case "C":{
+                crtajBrod(Integer.parseInt(command.group("idBrodC")));
+            }
+            break;
+
             case "Q":{
                 return false;
             }
@@ -178,5 +197,10 @@ public static CLISingleton cliSingleton;
     private void priveziNaRezervirano(Integer idBrod)
     {
         StoreSingleton.getInstance().priveziBrodSRezervacijom(idBrod);
+    }
+
+    private void crtajBrod(Integer idBrod)
+    {
+        StoreSingleton.getInstance().crtajBrod(idBrod);
     }
 }
