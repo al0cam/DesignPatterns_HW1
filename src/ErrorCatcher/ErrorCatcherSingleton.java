@@ -21,7 +21,6 @@ public class ErrorCatcherSingleton {
 	{
 		errorCount++;
 		System.out.println("\nError count: " + errorCount+"\n  | File: "+fileName + "\n  | Line: "+Arrays.toString(line)+"\n  | Cause: "+e.getMessage()+"\n");
-
 	}
 
 	public void catchCustomError( String error)

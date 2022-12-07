@@ -2,12 +2,14 @@ package CLI;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ErrorCatcher.ErrorCatcherSingleton;
-import Vrsta.Trajekt;
-import Vrsta.VrstaHandler;
+import Tablica.TablicaState;
 import csvReader.CSVReaderFactory;
 import models.Rezervacija;
 import models.Vez;
@@ -16,9 +18,6 @@ import virtualTime.VirtualTimeSingleton;
 
 public class CLISingleton {
     private static CLISingleton cliSingleton;
-    private boolean header = false;
-    private boolean footer = false;
-    private boolean ordinalNumbers = false;
 
 	private CLISingleton(){}
 
@@ -33,15 +32,6 @@ public class CLISingleton {
 
     public void commandInterpreter()
     {
-        // Pattern pattern = Pattern.compile(
-        //     "(?<bigGroup>(I$)|"+
-        //     "(VR (?<datumIVrijeme>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
-        //     "(V (?<vrstaVeza>[A-Z]{2}) (?<status>[A-Z]) (?<datumVrijemeOd>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9]) (?<datumVrijemeDo>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
-        //     "(UR (?<nazivDatoteke>\\w+\\.csv)$)|"+
-        //     "(ZD (?<idBrodZD>\\d+)$)|"+
-        //     "(ZP (?<idBrodZP>\\d+) (?<trajanjeUSatima>\\d+)$)|"+
-        //     "(Q$))"
-        //     );
         Pattern pattern = Pattern.compile(
             "(?<bigGroup>(I$)|"+
             "(VR (?<datumIVrijeme>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
@@ -49,14 +39,13 @@ public class CLISingleton {
             "(UR (?<nazivDatoteke>\\w+\\.csv)$)|"+
             "(ZD (?<idBrodZD>\\d+)$)|"+
             "(ZP (?<idBrodZP>\\d+) (?<trajanjeUSatima>\\d+)$)|"+
-            "(F (?<idBrodF>\\d+) (?<kanal>\\d+)$)|"+
+            "(F (?<idBrodF>\\d+) (?<kanal>\\d+)(?<izlaz> Q)?$)|"+
             "(T(?<option1> [ZPRB]{1,2})?(?<option2> [ZPRB]{1,2})?(?<option3> [ZPRB]{12})?$)|"+
             "(ZA (?<datumVrijmeZA>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. [0-2]\\d\\:[0-5][0-9])$)|"+
             "(C (?<idBrodC>\\d+)$)|"+
             "(Q$))"
             );
 
-            // TODO: slozit chain of responsibility koji crta brodove prema vrsti a uzima id broda kao arg tj objekt broda
         boolean work = true;
         while(work)
         {
@@ -76,7 +65,6 @@ public class CLISingleton {
             }
         }
     }
-
 
     private boolean executeCommand(Matcher command)
     {
@@ -113,6 +101,11 @@ public class CLISingleton {
             break;
 
             case "F":{
+                radioKanali(
+                    Integer.parseInt(command.group("idBrodF")),
+                    Integer.parseInt(command.group("kanal")),
+                    command.group("izlaz") != null
+                );
             }
             break;
 
@@ -122,6 +115,7 @@ public class CLISingleton {
             break;
 
             case "ZA":{
+                zauzetiVezoviPremaVrsti(command.group("datumVrijmeZA"));
             }
             break;
 
@@ -139,36 +133,26 @@ public class CLISingleton {
 
     private void statusVezova()
     {
-        if(header)
-        {
-            System.out.println(String.format("%130s","").replace(" ","_"));
-            System.out.println("\nTablica - Ispis statusa vezova u trenutno vrijeme");
-            System.out.println(String.format("%130s","").replace(" ","_"));
-            System.out.println(
+        List<String> content = new ArrayList<>();
+        for (Vez vez : StoreSingleton.getInstance().getVezovi()) {
+            content.add(
                 String.format(
-                    "%1$5s | %2$5s | %3$-7s |  %4$-5s |  %5$20s |  %6$20s | %7$20s | %8$20s | %9$-10s",
-                    "rb","id","oznaka","vrsta","cijenaVezaPoSatu","maksimalnaDuljina","maksimalnaSirina","maksimalnaDubina","zauzet"
-                )
+                    "%1$5s | %2$-7s |  %3$-5s |  %4$20s |  %5$20s | %6$20s | %7$20s | %8$-10s",
+                    vez.getId(),vez.getOznaka(),vez.getVrsta(),vez.getCijenaVezaPoSatu(),
+                    vez.getMaksimalnaDuljina(),vez.getMaksimalnaSirina(),vez.getMaksimalnaDubina(),
+                    StoreSingleton.getInstance().vezZauzetUVrijeme(vez, VirtualTimeSingleton.getInstance().getVirtualtime())
+                )    
             );
         }
-        
-        Integer index = 1;
-        for (Vez vez : StoreSingleton.getInstance().getVezovi()) {
-            System.out.println(
+
+        TablicaState.getInstance().print(
+            "Ispis statusa vezova u trenutno vrijeme",
             String.format(
-                "%1$5s | %2$5s | %3$-7s |  %4$-5s |  %5$20s |  %6$20s | %7$20s | %8$20s | %9$-10s",
-                index++,vez.getId(),vez.getOznaka(),vez.getVrsta(),vez.getCijenaVezaPoSatu(),
-                vez.getMaksimalnaDuljina(),vez.getMaksimalnaSirina(),vez.getMaksimalnaDubina(),
-                StoreSingleton.getInstance().vezZauzetUVrijeme(vez, VirtualTimeSingleton.getInstance().getVirtualtime())
-            )
+                    "%1$5s | %2$-7s |  %3$-5s |  %4$20s |  %5$20s | %6$20s | %7$20s | %8$-10s",
+                    "id","oznaka","vrsta","cijenaVezaPoSatu","maksimalnaDuljina","maksimalnaSirina","maksimalnaDubina","zauzet"
+                ),
+            content
         );
-        }
-        if(footer)
-        {
-            System.out.println(String.format("%130s","").replace(" ","_"));
-            System.out.println("\nTotal: "+StoreSingleton.getInstance().getVezovi().size());
-            System.out.println(String.format("%130s","").replace(" ","_"));
-        }
     }
 
     private void postaviVirtualnoVrijeme(String vrijemeIDatum)
@@ -195,7 +179,6 @@ public class CLISingleton {
         }
     }
 
-
     private void stvoriZahtjev(Integer idBrod, Integer trajanjeUSatima)
     {
         StoreSingleton.getInstance().novaRezervacija(idBrod, trajanjeUSatima);
@@ -206,50 +189,41 @@ public class CLISingleton {
         StoreSingleton.getInstance().priveziBrodSRezervacijom(idBrod);
     }
 
-    private void findOption(String option) throws Exception
-	{   
-		switch (option.trim()) {
-            case "Z":
-                header = true;
-                return;
-            case "P":
-                footer = true;
-                return;
-            case "RB":
-                ordinalNumbers = true;
-                return;
-			default:
-                throw new Exception("No option: "+option +" for command T");
-		}
-	}
+    private void radioKanali(Integer idBrod, Integer frekvencija, boolean izlaz)
+    {
+        if(izlaz)
+            StoreSingleton.getInstance().odSpajanjeSKanala(idBrod,frekvencija);
+        else
+            StoreSingleton.getInstance().spajanjeNaKanal(idBrod,frekvencija);
+    }
 
     private void tablica(String option1, String option2, String option3)
     {
-        if(option1 == null && option2 == null && option3 == null)
-        {
-            header = false;
-            footer = false;
-            ordinalNumbers = false;
-            return;
+        TablicaState.getInstance().alterState(option1, option2, option3);
+    }
+
+    private void zauzetiVezoviPremaVrsti(String dateTime)
+    {
+        Map<String, Integer> map = StoreSingleton.getInstance().zauzetiVezoviPremaVrsti(dateTime);
+        
+        List<String> content = new ArrayList<>();
+        for (Map.Entry<String,Integer> set : map.entrySet()) {
+            content.add(
+                String.format(
+                    "%1$-5s |  %2$20s ",
+                    set.getKey(),set.getValue()
+                )    
+            );
         }
-        if(option1 != null)
-            try {
-                findOption(option1);
-            } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchGeneralError(e);
-            }
-        if(option2 != null)
-            try {
-                findOption(option2);
-            } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchGeneralError(e);
-            }
-        if(option3 != null)
-            try {
-                findOption(option3);
-            } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchGeneralError(e);
-            }
+
+        TablicaState.getInstance().print(
+            "Ispis ukupnog broja zauzetih vezova prema vrsti",
+            String.format(
+                    "%1$-5s |  %2$20s ",
+                    "vrsta","brojZauzetihVezova"
+                ),
+            content
+        );
     }
 
     private void crtajBrod(Integer idBrod)

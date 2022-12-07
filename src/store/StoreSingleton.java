@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ErrorCatcher.ErrorCatcherSingleton;
+import Visitor.VezVisitor;
 import Vrsta.Trajekt;
 import Vrsta.VrstaHandler;
 import models.Brod;
@@ -18,10 +21,12 @@ import models.Raspored;
 import models.Rezervacija;
 import models.Vez;
 import models.ZahtjevRezervacije;
+import models.Zapis;
 import virtualTime.VirtualTimeSingleton;
 
 public class StoreSingleton {
 	private static StoreSingleton store;
+
     public List<Brod> brodovi;
     public List<Luka> luke;
     public List<Raspored> rasporedi;
@@ -30,6 +35,8 @@ public class StoreSingleton {
     public List<Kanal> kanali;
     public List<ZahtjevRezervacije> zahtjeviRezervacija = new ArrayList<>();
     public List<Rezervacija> rezervacije = new ArrayList<>();
+	// TODO: ubacit svaku akciju u dnevnik
+	public List<Zapis> dnevnik = new ArrayList<>();
 
 	private StoreSingleton(){}
 
@@ -208,16 +215,31 @@ public class StoreSingleton {
 			}
 			else
 			{
+				Vez najboljiVez = null;
 				for (Vez vez : slobodniVezovi) {
 					if(paseBrodVezu(brod, vez))
 					{
-						return new Rezervacija(brod, vez, 
-						zahtjevRezervacije.getDatumVrijemeOd(), 
-						zahtjevRezervacije.getDatumVrijemeOd().plusHours(zahtjevRezervacije.getTrajanjePrivezaUSatima()), 
-						zahtjevRezervacije.getTrajanjePrivezaUSatima());
+						if(
+							najboljiVez == null ||
+							(
+								najboljiVez.getCijenaVezaPoSatu() >= vez.getCijenaVezaPoSatu() &&
+								najboljiVez.getMaksimalnaDubina() >= vez.getMaksimalnaDubina() &&
+								najboljiVez.getMaksimalnaDuljina() >= vez.getMaksimalnaDuljina() &&
+								najboljiVez.getMaksimalnaSirina() >= vez.getMaksimalnaSirina()
+							)
+						)
+							najboljiVez = vez;
 					}
 				}
-				System.out.println("Brod ne odgovara niti jednom slobodnom vezu");
+				
+				if(najboljiVez == null)
+					System.out.println("Brod ne odgovara niti jednom slobodnom vezu");
+				else 
+					return new Rezervacija(
+						brod, najboljiVez, 
+						zahtjevRezervacije.getDatumVrijemeOd(), 
+						zahtjevRezervacije.getDatumVrijemeOd().plusHours(zahtjevRezervacije.getTrajanjePrivezaUSatima())
+					);
 			}
 		} catch (Exception e) {
 			ErrorCatcherSingleton.getInstance().catchGeneralError(e);
@@ -300,6 +322,168 @@ public class StoreSingleton {
 		}
 	}
 
+	private Kanal getKanalByFrekvencija(Integer id) throws Exception
+	{
+		for (Kanal kanal : kanali) 
+			if(kanal.getFrekvencija().equals(id))
+				return kanal;
+
+		throw new Exception("No kanal with id: "+id);
+	}
+	
+	private boolean kanalPunUVrijeme(Kanal kanal, LocalDateTime time)
+	{
+
+		// TODO: brojati koliko brodova ima na kanalu
+		// ako je brod prijavljen u vrijeme counter++
+		// ako je se brod odjavio prije isteka rezervacije counter--
+		// ako je brodu istekla rezervacija counter--
+		Integer counter = 0;
+		for (Zapis zapis : dnevnik) {
+			if(
+				zapis.getKanal().equals(kanal) && 
+				zapis.getVrsta().equals("privez") && 
+				zapis.isPrihvacenaKomunikacija() && 
+				zapis.getTime().isBefore(time) &&
+				zapis.isPrihvacenPrivez() && 
+				isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
+			)
+			{
+				counter++;
+			}
+		}
+		for (Zapis zapis : dnevnik) {
+			if(
+				zapis.getKanal().equals(kanal) && 
+				zapis.isPrihvacenaKomunikacija() && 
+				zapis.getTime().isBefore(time) &&
+				zapis.isPrihvacenPrivez() && 
+				!isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
+			)
+			{
+				counter--;
+			}
+		}
+
+		if(kanal.getMaksimalanBroj() > counter)
+			return false;
+		else return true;
+	}
+
+	private boolean brodNaKanaluUVrijeme(Brod brod, Kanal kanal, LocalDateTime time)
+	{
+		for (Zapis zapis : dnevnik) {
+			if(
+				zapis.getKanal().equals(kanal) && 
+				zapis.getBrod().equals(brod) && 
+				zapis.getTime().isBefore(time) &&
+				(
+					(
+						zapis.getVrsta().equals("prijava") && 
+						zapis.isPrihvacenaKomunikacija()
+					) || 
+					(
+						zapis.getVrsta().equals("privez") && 
+						zapis.isPrihvacenPrivez() &&
+						isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
+					)
+				) 
+			)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean obavijestiPrisutneBrodove(Kanal kanal, LocalDateTime time, String message)
+	{
+		for (Zapis zapis : dnevnik) {
+			if(
+				zapis.getKanal().equals(kanal) && 
+				zapis.getVrsta().equals("privez") && 
+				zapis.isPrihvacenaKomunikacija() && 
+				zapis.getTime().isBefore(time) &&
+				zapis.isPrihvacenPrivez() && 
+				isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
+			)
+			{
+				counter++;
+			}
+		}
+		for (Zapis zapis : dnevnik) {
+			if(
+				zapis.getKanal().equals(kanal) && 
+				zapis.isPrihvacenaKomunikacija() && 
+				zapis.getTime().isBefore(time) &&
+				zapis.isPrihvacenPrivez() && 
+				!isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
+			)
+			{
+				counter--;
+			}
+		}
+
+		if(kanal.getMaksimalanBroj() > counter)
+			return false;
+		else return true;
+	}
+
+	public void spajanjeNaKanal(Integer idBrod, Integer frekvencija)
+	{
+		try {
+			Kanal kanal = getKanalByFrekvencija(frekvencija);
+			Brod brod = getBrodById(idBrod);
+			// TODO: provjeri ima li kanal mjesta ako ne baci poruku
+			if(!kanalPunUVrijeme(kanal, VirtualTimeSingleton.getInstance().getVirtualtime()))
+			{
+				Zapis zapis = new Zapis.Builder().
+					setKanal(kanal).setBrod(brod).
+					setPrihvacenaKomunikacija(true).
+					setTime(VirtualTimeSingleton.getInstance().getVirtualtime()).setVrsta("prijava").
+					build();
+				dnevnik.add(zapis);
+				return;
+			}
+			
+		} catch (Exception e) {
+			ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+		}
+		System.out.println("Kanal sa frekvencijom: "+frekvencija+" je pun");
+	}
+
+	public void odSpajanjeSKanala(Integer idBrod, Integer frekvencija)
+	{
+		try {
+			Kanal kanal = getKanalByFrekvencija(frekvencija);
+			Brod brod = getBrodById(idBrod);
+			// TODO: makni brod s kanala
+			if(true)
+			{
+				return;
+			}
+			
+		} catch (Exception e) {
+			ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+		}
+		System.out.println("Kanal sa frekvencijom: "+frekvencija+" je pun");
+	}
+
+	public Map<String, Integer> zauzetiVezoviPremaVrsti(String dateTime)
+	{
+        VezVisitor.getInstance().clearMap();
+		VezVisitor.getInstance().setTime(LocalDateTime.parse(dateTime.trim(),DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm")));
+
+		System.out.println("MAP 2: "+VezVisitor.getInstance().getMap());
+		for (Vez vez : vezovi) 
+			try {
+				vez.accept(VezVisitor.getInstance());
+			} catch (Exception e) {
+				ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+			}
+		
+		return VezVisitor.getInstance().getMap();
+	}
 
 	public void crtajBrod(Integer idBrod)
 	{

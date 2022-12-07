@@ -1,5 +1,9 @@
 package models;
 
+import java.util.Map;
+
+import Visitor.VezVisitor;
+
 public class Vez {
     private Integer id;
     private String oznaka;
@@ -9,6 +13,22 @@ public class Vez {
     private Integer maksimalnaSirina;
     private Float maksimalnaDubina;
 
+    public void accept(VezVisitor visitor) throws Exception
+    {
+        switch (vrsta) {
+            case "PU":
+                visitor.visitPUVez(this);
+                break;
+            case "PO":
+                visitor.visitPOVez(this);
+                break;
+            case "OS":
+                visitor.visitOSVez(this);
+                break;
+            default:
+                throw new Exception("Vez vrsta: "+vrsta+" doesn't exist");
+        }
+    }
 
     public Vez(Integer id, String oznaka, String vrsta, Integer cijenaVezaPoSatu, Integer maksimalnaDuljina,
             Integer maksimalnaSirina, Float maksimalnaDubina) {
