@@ -15,12 +15,10 @@ import store.StoreSingleton;
 import virtualTime.VirtualTimeSingleton;
 
 public class CLISingleton {
-public static CLISingleton cliSingleton;
+    private static CLISingleton cliSingleton;
     private boolean header = false;
     private boolean footer = false;
     private boolean ordinalNumbers = false;
-
-
 
 	private CLISingleton(){}
 
@@ -119,6 +117,7 @@ public static CLISingleton cliSingleton;
             break;
 
             case "T":{
+                tablica(command.group("option1"),command.group("option2"),command.group("option3"));
             }
             break;
 
@@ -140,28 +139,36 @@ public static CLISingleton cliSingleton;
 
     private void statusVezova()
     {
-        System.out.println(String.format("%130s","").replace(" ","_"));
-        System.out.println("\nTablica - Ispis statusa vezova u trenutno vrijeme");
-        System.out.println(String.format("%130s","").replace(" ","_"));
-        System.out.println(
-            String.format(
-                "%1$5s | %2$-7s |  %3$-5s |  %4$20s |  %5$20s | %6$20s | %7$20s | %8$-10s",
-                "id","oznaka","vrsta","cijenaVezaPoSatu","maksimalnaDuljina","maksimalnaSirina","maksimalnaDubina","zauzet"
-            )
-        );
+        if(header)
+        {
+            System.out.println(String.format("%130s","").replace(" ","_"));
+            System.out.println("\nTablica - Ispis statusa vezova u trenutno vrijeme");
+            System.out.println(String.format("%130s","").replace(" ","_"));
+            System.out.println(
+                String.format(
+                    "%1$5s | %2$5s | %3$-7s |  %4$-5s |  %5$20s |  %6$20s | %7$20s | %8$20s | %9$-10s",
+                    "rb","id","oznaka","vrsta","cijenaVezaPoSatu","maksimalnaDuljina","maksimalnaSirina","maksimalnaDubina","zauzet"
+                )
+            );
+        }
+        
+        Integer index = 1;
         for (Vez vez : StoreSingleton.getInstance().getVezovi()) {
             System.out.println(
             String.format(
-                "%1$5s | %2$-7s |  %3$-5s |  %4$20s |  %5$20s | %6$20s | %7$20s | %8$-10s",
-                vez.getId(),vez.getOznaka(),vez.getVrsta(),vez.getCijenaVezaPoSatu(),
+                "%1$5s | %2$5s | %3$-7s |  %4$-5s |  %5$20s |  %6$20s | %7$20s | %8$20s | %9$-10s",
+                index++,vez.getId(),vez.getOznaka(),vez.getVrsta(),vez.getCijenaVezaPoSatu(),
                 vez.getMaksimalnaDuljina(),vez.getMaksimalnaSirina(),vez.getMaksimalnaDubina(),
                 StoreSingleton.getInstance().vezZauzetUVrijeme(vez, VirtualTimeSingleton.getInstance().getVirtualtime())
             )
         );
         }
-        System.out.println(String.format("%130s","").replace(" ","_"));
-        System.out.println("\nTotal: "+StoreSingleton.getInstance().getVezovi().size());
-        System.out.println(String.format("%130s","").replace(" ","_"));
+        if(footer)
+        {
+            System.out.println(String.format("%130s","").replace(" ","_"));
+            System.out.println("\nTotal: "+StoreSingleton.getInstance().getVezovi().size());
+            System.out.println(String.format("%130s","").replace(" ","_"));
+        }
     }
 
     private void postaviVirtualnoVrijeme(String vrijemeIDatum)
@@ -199,8 +206,56 @@ public static CLISingleton cliSingleton;
         StoreSingleton.getInstance().priveziBrodSRezervacijom(idBrod);
     }
 
+    private void findOption(String option) throws Exception
+	{   
+		switch (option.trim()) {
+            case "Z":
+                header = true;
+                return;
+            case "P":
+                footer = true;
+                return;
+            case "RB":
+                ordinalNumbers = true;
+                return;
+			default:
+                throw new Exception("No option: "+option +" for command T");
+		}
+	}
+
+    private void tablica(String option1, String option2, String option3)
+    {
+        if(option1 == null && option2 == null && option3 == null)
+        {
+            header = false;
+            footer = false;
+            ordinalNumbers = false;
+            return;
+        }
+        if(option1 != null)
+            try {
+                findOption(option1);
+            } catch (Exception e) {
+                ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+            }
+        if(option2 != null)
+            try {
+                findOption(option2);
+            } catch (Exception e) {
+                ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+            }
+        if(option3 != null)
+            try {
+                findOption(option3);
+            } catch (Exception e) {
+                ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+            }
+    }
+
     private void crtajBrod(Integer idBrod)
     {
         StoreSingleton.getInstance().crtajBrod(idBrod);
     }
+
+
 }
