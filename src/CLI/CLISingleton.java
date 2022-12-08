@@ -13,6 +13,7 @@ import Tablica.TablicaState;
 import csvReader.CSVReaderFactory;
 import models.Rezervacija;
 import models.Vez;
+import models.Zapis;
 import store.StoreSingleton;
 import virtualTime.VirtualTimeSingleton;
 
