@@ -3,7 +3,7 @@ package models;
 import java.time.LocalDateTime;
 
 public class Zapis {
-    // vrste: prijava, odjava, privez, odvez
+    // vrste: prijava, odjava, privez odjava je za odvez i odjavu zajedno
     private String vrsta;
     private Kanal kanal;
     private Brod brod;

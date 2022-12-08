@@ -334,99 +334,47 @@ public class StoreSingleton {
 	private boolean kanalPunUVrijeme(Kanal kanal, LocalDateTime time)
 	{
 
-		// TODO: brojati koliko brodova ima na kanalu
-		// ako je brod prijavljen u vrijeme counter++
-		// ako je se brod odjavio prije isteka rezervacije counter--
-		// ako je brodu istekla rezervacija counter--
-		Integer counter = 0;
-		for (Zapis zapis : dnevnik) {
-			if(
-				zapis.getKanal().equals(kanal) && 
-				zapis.getVrsta().equals("privez") && 
-				zapis.isPrihvacenaKomunikacija() && 
-				zapis.getTime().isBefore(time) &&
-				zapis.isPrihvacenPrivez() && 
-				isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
-			)
-			{
-				counter++;
-			}
-		}
-		for (Zapis zapis : dnevnik) {
-			if(
-				zapis.getKanal().equals(kanal) && 
-				zapis.isPrihvacenaKomunikacija() && 
-				zapis.getTime().isBefore(time) &&
-				zapis.isPrihvacenPrivez() && 
-				!isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
-			)
-			{
-				counter--;
-			}
-		}
-
-		if(kanal.getMaksimalanBroj() > counter)
-			return false;
-		else return true;
+		return null;
 	}
 
-	private boolean brodNaKanaluUVrijeme(Brod brod, Kanal kanal, LocalDateTime time)
+	private Zapis zadnjiZapisZaBrodIKanal(Brod brod, Kanal kanal, LocalDateTime time)
 	{
+		Zapis zadnjiZapisZaBrodIKanal = null;
 		for (Zapis zapis : dnevnik) {
-			if(
-				zapis.getKanal().equals(kanal) && 
-				zapis.getBrod().equals(brod) && 
-				zapis.getTime().isBefore(time) &&
-				(
-					(
-						zapis.getVrsta().equals("prijava") && 
-						zapis.isPrihvacenaKomunikacija()
-					) || 
-					(
-						zapis.getVrsta().equals("privez") && 
-						zapis.isPrihvacenPrivez() &&
-						isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
-					)
-				) 
-			)
+			if(zapis.getBrod().equals(brod) && zapis.getKanal().equals(kanal))
 			{
-				return true;
+				if(zadnjiZapisZaBrodIKanal == null)
+				{
+					zadnjiZapisZaBrodIKanal = zapis;
+				}
+				else if(isTimeBetween(zadnjiZapisZaBrodIKanal.getTime(), time, zapis.getTime()))
+					zadnjiZapisZaBrodIKanal = zapis;
 			}
 		}
-		return false;
+		return zadnjiZapisZaBrodIKanal;
 	}
 
-	private boolean obavijestiPrisutneBrodove(Kanal kanal, LocalDateTime time, String message)
+	private boolean isBrodNaKanalu(Brod brod, Kanal kanal, LocalDateTime time)
 	{
-		for (Zapis zapis : dnevnik) {
-			if(
-				zapis.getKanal().equals(kanal) && 
-				zapis.getVrsta().equals("privez") && 
-				zapis.isPrihvacenaKomunikacija() && 
-				zapis.getTime().isBefore(time) &&
-				zapis.isPrihvacenPrivez() && 
-				isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
-			)
-			{
-				counter++;
-			}
-		}
-		for (Zapis zapis : dnevnik) {
-			if(
-				zapis.getKanal().equals(kanal) && 
-				zapis.isPrihvacenaKomunikacija() && 
-				zapis.getTime().isBefore(time) &&
-				zapis.isPrihvacenPrivez() && 
-				!isTimeBetween(zapis.getRezervacija().getDatumVrijemeOd(), zapis.getRezervacija().getDatumVrijemeDo(), time)
-			)
-			{
-				counter--;
-			}
-		}
-
-		if(kanal.getMaksimalanBroj() > counter)
+		Zapis zadnjiZapis = zadnjiZapisZaBrodIKanal(brod, kanal, time);
+		if(zadnjiZapis.getVrsta().equals("prijava") && zadnjiZapis.isPrihvacenaKomunikacija())
+			return true;
+		else if(
+			zadnjiZapis.getVrsta().equals("privez") &&
+			zadnjiZapis.isPrihvacenPrivez() &&
+		 	isTimeBetween(zadnjiZapis.getRezervacija().getDatumVrijemeOd(), zadnjiZapis.getRezervacija().getDatumVrijemeDo(), time)
+		)
+			return true;
+		else 
 			return false;
-		else return true;
+	}
+
+	private void obavijestiPrisutneBrodove(Kanal kanal, LocalDateTime time, String message)
+	{
+		for (Brod brod : brodovi) {
+			if(isBrodNaKanalu(brod, kanal, time))
+				System.out.println("Brod: "+brod.getId()+" je dobio obavijest \n  | Obavijest: "+message);
+		}
 	}
 
 	public void spajanjeNaKanal(Integer idBrod, Integer frekvencija)
