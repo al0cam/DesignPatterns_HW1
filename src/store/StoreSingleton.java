@@ -288,7 +288,6 @@ public class StoreSingleton {
 				zapis.setPrihvacenPrivez(true);
 				zapis.setRezervacija(rezervacija);
 				dnevnik.add(zapis);
-				System.out.println("BRUV: "+kanal.getFrekvencija());
 				obavijestiPrisutneBrodove(
 					kanal,
 					VirtualTimeSingleton.getInstance().getVirtualtime(),
