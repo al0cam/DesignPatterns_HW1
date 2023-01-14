@@ -30,7 +30,6 @@ public class CLISingleton {
 		}
 		return cliSingleton;
 	}
-
     public void commandInterpreter()
     {
         Pattern pattern = Pattern.compile(
@@ -41,7 +40,7 @@ public class CLISingleton {
             "(ZD (?<idBrodZD>\\d+)$)|"+
             "(ZP (?<idBrodZP>\\d+) (?<trajanjeUSatima>\\d+)$)|"+
             "(F (?<idBrodF>\\d+) (?<kanal>\\d+)(?<izlaz> Q)?$)|"+
-            "(T(?<option1> [ZPRB]{1,2})?(?<option2> [ZPRB]{1,2})?(?<option3> [ZPRB]{12})?$)|"+
+            "(T(?<option1> [ZPRB]{1,2})?(?<option2> [ZPRB]{1,2})?(?<option3> [ZPRB]{1,2})?$)|"+
             "(ZA (?<datumVrijmeZA>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. [0-2]\\d\\:[0-5][0-9])$)|"+
             "(C (?<idBrodC>\\d+)$)|"+
             "(Q$))"

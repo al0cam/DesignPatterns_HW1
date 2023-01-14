@@ -9,6 +9,9 @@ import csvReader.CSVReaderFactory;
 import store.StoreSingleton;
 
 public class Main {
+	static boolean molLoaded = false;
+	static boolean vezLoaded = false;
+	static String molVezFile = null;
 
 	public static void main(String[] args) {
 		Pattern pattern = Pattern.compile(
@@ -70,7 +73,7 @@ public class Main {
 
 	private static boolean findFile(String arg, String fileName)
 	{
-		CSVReaderFactory csvReaderFactory = new CSVReaderFactory();
+		CSVReaderFactory csvReaderFactory  = new CSVReaderFactory();
 
 		switch (arg) {
 			case "-l":
@@ -92,6 +95,9 @@ public class Main {
 			case "-v":
 				try {
 					StoreSingleton.getInstance().setVezovi(csvReaderFactory.readFromCSV(fileName));
+					vezLoaded = true;
+					if(molLoaded && molVezFile != null)
+						findFile("-mv", molVezFile);
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
@@ -107,6 +113,9 @@ public class Main {
 			case "-m":
 				try {
 					StoreSingleton.getInstance().molovi = csvReaderFactory.readFromCSV(fileName);
+					molLoaded = true;
+					if(vezLoaded && molVezFile != null)
+						findFile("-mv", molVezFile);
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
@@ -122,7 +131,12 @@ public class Main {
 				return true;
 			case "-mv":
 				try {
-					StoreSingleton.getInstance().loadMolVez(csvReaderFactory.readFromCSV(fileName));
+					if(molLoaded && vezLoaded)
+					{
+						StoreSingleton.getInstance().loadMolVez(csvReaderFactory.readFromCSV(fileName));
+					}
+					else
+						molVezFile = fileName;
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
