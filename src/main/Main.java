@@ -12,6 +12,12 @@ public class Main {
 	static boolean molLoaded = false;
 	static boolean vezLoaded = false;
 	static String molVezFile = null;
+	private static String lukaFile = null;
+	private static String brodoviFile = null;
+	private static String vezoviFile = null;
+	private static String molFile = null;
+	private static String rasporediFile = null;
+	private static String kanaliFile = null;
 
 	public static void main(String[] args) {
 		Pattern pattern = Pattern.compile(
@@ -40,13 +46,20 @@ public class Main {
 
 		if(matcher.matches() && args.length == 12)
 		{
+			setFileName(matcher.group("arg1"),matcher.group("file1"));
+			setFileName(matcher.group("arg2"),matcher.group("file2"));
+			setFileName(matcher.group("arg3"),matcher.group("file3"));
+			setFileName(matcher.group("arg4"),matcher.group("file4"));
+			setFileName(matcher.group("arg5"),matcher.group("file5"));
+			setFileName(matcher.group("arg6"),matcher.group("file6"));
+
 			if(
-				findFile(matcher.group("arg1"),matcher.group("file1")) &&
-				findFile(matcher.group("arg2"),matcher.group("file2")) &&
-				findFile(matcher.group("arg3"),matcher.group("file3")) &&
-				findFile(matcher.group("arg4"),matcher.group("file4")) &&
-				findFile(matcher.group("arg5"),matcher.group("file5")) &&
-				findFile(matcher.group("arg6"),matcher.group("file6")) 
+				findFile("-l",lukaFile) &&
+				findFile("-b",brodoviFile) &&
+				findFile("-m",molFile) &&
+				findFile("-v",molFile) &&
+				findFile("-mv",molVezFile) &&
+				findFile("-k",kanaliFile)
 			)
 			{
 				CLISingleton.getInstance().commandInterpreter();
@@ -54,14 +67,22 @@ public class Main {
 		}
 		else if((matcher.matches() && args.length == 14))
 		{
+			setFileName(matcher.group("arg1"),matcher.group("file1"));
+			setFileName(matcher.group("arg2"),matcher.group("file2"));
+			setFileName(matcher.group("arg3"),matcher.group("file3"));
+			setFileName(matcher.group("arg4"),matcher.group("file4"));
+			setFileName(matcher.group("arg5"),matcher.group("file5"));
+			setFileName(matcher.group("arg6"),matcher.group("file6"));
+			setFileName(matcher.group("arg7"),matcher.group("file7"));
+
 			if(
-				findFile(matcher.group("arg1"),matcher.group("file1")) &&
-				findFile(matcher.group("arg2"),matcher.group("file2")) &&
-				findFile(matcher.group("arg3"),matcher.group("file3")) &&
-				findFile(matcher.group("arg4"),matcher.group("file4")) &&
-				findFile(matcher.group("arg5"),matcher.group("file5")) &&
-				findFile(matcher.group("arg6"),matcher.group("file6")) &&
-				findFile(matcher.group("arg7"),matcher.group("file7"))
+				findFile("-l",lukaFile) &&
+				findFile("-b",brodoviFile) &&
+				findFile("-m",molFile) &&
+				findFile("-v",molFile) &&
+				findFile("-mv",molVezFile) &&
+				findFile("-k",kanaliFile) &&
+				findFile("-r",rasporediFile)
 			)
 			{
 				CLISingleton.getInstance().commandInterpreter();
@@ -69,6 +90,35 @@ public class Main {
 		}
 		
 		System.out.println("END");
+	}
+
+	private static void setFileName(String arg, String fileName)
+	{
+		switch (arg) {
+			case "-l":
+				lukaFile = fileName;
+				break;
+			case "-b":
+				brodoviFile = fileName;
+				break;
+			case "-v":
+				vezoviFile = fileName;
+				break;
+			case "-m":
+				molFile = fileName;
+				break;
+			case "-mv":
+				molVezFile = fileName;
+				break;
+			case "-k":
+				kanaliFile = fileName;
+				break;
+			case "-r":
+				rasporediFile = fileName;
+				break;
+			default:
+				break;
+		}
 	}
 
 	private static boolean findFile(String arg, String fileName)
@@ -95,9 +145,6 @@ public class Main {
 			case "-v":
 				try {
 					StoreSingleton.getInstance().setTempVezovi(csvReaderFactory.readFromCSV(fileName));
-					vezLoaded = true;
-					if(molLoaded && molVezFile != null)
-						findFile("-mv", molVezFile);
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
@@ -113,9 +160,6 @@ public class Main {
 			case "-m":
 				try {
 					StoreSingleton.getInstance().setMolovi(csvReaderFactory.readFromCSV(fileName));
-					molLoaded = true;
-					if(vezLoaded && molVezFile != null)
-						findFile("-mv", molVezFile);
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
@@ -131,12 +175,7 @@ public class Main {
 				return true;
 			case "-mv":
 				try {
-					if(molLoaded && vezLoaded)
-					{
-						StoreSingleton.getInstance().loadMolVez(csvReaderFactory.readFromCSV(fileName));
-					}
-					else
-						molVezFile = fileName;
+					StoreSingleton.getInstance().loadMolVez(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
