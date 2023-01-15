@@ -12,6 +12,7 @@ public class Iterator {
 
     public boolean hasNext()
     {
+        // System.out.println("Position: " + position + " Size: " + collection.size());
         if(position < collection.size())
         {
             return true;

@@ -6,7 +6,6 @@ import java.util.List;
 public class Mol extends ComponentAndIterator implements Component{
     private Integer id;
     private String naziv;
-    private List<Vez> vezovi;
 
     @Override
     public void execute()
@@ -20,12 +19,12 @@ public class Mol extends ComponentAndIterator implements Component{
     public Mol(Integer id, String naziv, List<Vez> vezovi) {
         this.id = id;
         this.naziv = naziv;
-        this.vezovi = vezovi;
+        this.children = new ArrayList<>();
     }
     public Mol(Integer id, String naziv) {
         this.id = id;
         this.naziv = naziv;
-        this.vezovi = new ArrayList<>();
+        this.children = new ArrayList<>();
     }
     public Integer getId() {
         return id;
@@ -40,14 +39,26 @@ public class Mol extends ComponentAndIterator implements Component{
         this.naziv = naziv;
     }
     public List<Vez> getVezovi() {
+        List<Vez> vezovi = new ArrayList<>();
+        Iterator iterator = this.createIterator();
+        while(iterator.hasNext())
+        {
+            Component component = (Component) iterator.next();
+            if(component instanceof Vez)
+            {
+                Vez vez = (Vez) component;
+                vezovi.add(vez);
+            }
+        }    
         return vezovi;
     }
+
     public void setVezovi(List<Vez> vezovi) {
-        this.vezovi = vezovi;
+        for (Vez vez : vezovi) {
+            add(vez);
+        }
     }
     public void addVez(Vez vez){
-        if(vezovi == null)
-            vezovi = new ArrayList<>();
-        vezovi.add(vez);
+        add(vez);
     }
 }

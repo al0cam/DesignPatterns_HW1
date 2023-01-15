@@ -14,6 +14,8 @@ import Visitor.VezVisitor;
 import Vrsta.Trajekt;
 import Vrsta.VrstaHandler;
 import models.Brod;
+import models.Component;
+import models.Iterator;
 import models.Kanal;
 import models.Luka;
 import models.Mol;
@@ -28,13 +30,9 @@ import virtualTime.VirtualTimeSingleton;
 public class StoreSingleton {
 	private static StoreSingleton store;
 
-    public List<Brod> brodovi;
-    // public List<Luka> luke;
 	public Luka luka;
     public List<Raspored> rasporedi;
-    public List<Vez> vezovi;
-    public List<Mol> molovi;
-    public List<Kanal> kanali;
+    public List<Vez> tempVezovi;
     public List<ZahtjevRezervacije> zahtjeviRezervacija = new ArrayList<>();
     public List<Rezervacija> rezervacije = new ArrayList<>();
 
@@ -148,7 +146,7 @@ public class StoreSingleton {
 	public List<Vez> pronadjiSlobodneVezove(LocalDateTime time)
 	{
 		List<Vez> slobodniVezovi = new ArrayList<>();
-		for (Vez vez : vezovi) 
+		for (Vez vez : getVezovi()) 
 			if(!vezZauzetUVrijeme(vez, time))
 				slobodniVezovi.add(vez);
 
@@ -158,7 +156,7 @@ public class StoreSingleton {
 	public List<Vez> pronadjiZauzeteVezove(LocalDateTime time)
 	{
 		List<Vez> zauzetiVezovi = new ArrayList<>();
-		for (Vez vez : vezovi) 
+		for (Vez vez : getVezovi()) 
 			if(vezZauzetUVrijeme(vez, time))
 				zauzetiVezovi.add(vez);
 
@@ -198,20 +196,39 @@ public class StoreSingleton {
 
 	public Brod getBrodById(Integer id) throws Exception
 	{
-		for (Brod bro : brodovi) 
+		for (Brod bro : getBrodovi()) 
 			if(bro.getId().equals(id))
 				return bro;
 
 		throw new Exception("No brod with id: "+id);
 	}
 
+
+	private Vez getTempVezById(Integer idVez) throws Exception
+	{
+		for (Vez vez : tempVezovi) {
+			if(vez.getId().equals(idVez))
+				return vez;
+		}
+		throw new Exception("No vez with id: "+idVez);
+	}
+
 	public Vez getVezById(Integer id) throws Exception
 	{
-		for (Vez vez : vezovi)
+		for (Vez vez : getVezovi())
 			if(vez.getId().equals(id))
 				return vez;
 
 		throw new Exception("No vez with id: "+id);
+	}
+
+	private Mol getMolById(Integer id) throws Exception
+	{
+		for (Mol mol : getMolovi()) 
+			if(mol.getId().equals(id))
+				return mol;
+
+		throw new Exception("No mol with id: "+id);
 	}
 
 	public Rezervacija pretvoriZahtjevURezervaciju(ZahtjevRezervacije zahtjevRezervacije)
@@ -377,32 +394,11 @@ public class StoreSingleton {
 		}
 	}
 
-	private Mol getMolById(Integer id) throws Exception
-	{
-		for (Mol mol : molovi) 
-			if(mol.getId().equals(id))
-				return mol;
-
-		throw new Exception("No mol with id: "+id);
-	}
-
-	public void loadMolVez(List<MolVez> molVezovi)
-	{
-		for (MolVez molVez : molVezovi) {
-			try {
-				Mol mol = getMolById(molVez.getMol());
-				for (Integer idVez : molVez.getVezovi()) {
-					mol.addVez(getVezById(idVez));
-				}
-			} catch (Exception e) {
-				ErrorCatcherSingleton.getInstance().catchGeneralError(e);
-			}
-		}
-	}
+	
 
 	private Kanal getKanalByFrekvencija(Integer id) throws Exception
 	{
-		for (Kanal kanal : kanali) 
+		for (Kanal kanal : getKanali()) 
 			if(kanal.getFrekvencija().equals(id))
 				return kanal;
 
@@ -445,7 +441,7 @@ public class StoreSingleton {
 
 	private boolean isBrodNaAnyKanalu(Brod brod, LocalDateTime time)
 	{
-		for (Kanal kanal : kanali) {
+		for (Kanal kanal : getKanali()) {
 			Zapis zadnjiZapis = zadnjiZapisZaBrodIKanal(brod, kanal, time);
 			if(zadnjiZapis == null)
 				break;
@@ -463,7 +459,7 @@ public class StoreSingleton {
 
 	private Kanal dohvatiKanalNaKojemJeBrod(Brod brod, LocalDateTime time)
 	{
-		for (Kanal kanal : kanali) {
+		for (Kanal kanal : getKanali()) {
 			Zapis zadnjiZapis = zadnjiZapisZaBrodIKanal(brod, kanal, time);
 			if(zadnjiZapis == null)
 				break;
@@ -482,7 +478,7 @@ public class StoreSingleton {
 	private boolean kanalPunUVrijeme(Kanal kanal, LocalDateTime time)
 	{
 		Integer counter = 0;
-		for (Brod brod : brodovi) {
+		for (Brod brod : getBrodovi()) {
 			if(isBrodNaKanalu(brod, kanal, time))
 				counter++;
 		}
@@ -495,7 +491,7 @@ public class StoreSingleton {
 
 	private void obavijestiPrisutneBrodove(Kanal kanal, LocalDateTime time, String message)
 	{
-		for (Brod brod : brodovi) {
+		for (Brod brod : getBrodovi()) {
 			if(isBrodNaKanalu(brod, kanal, time))
 				System.out.println("Brod: "+brod.getId()+" je dobio obavijest \n  | Obavijest: "+message);
 		}
@@ -565,7 +561,7 @@ public class StoreSingleton {
         VezVisitor.getInstance().clearMap();
 		VezVisitor.getInstance().setTime(LocalDateTime.parse(dateTime.trim(),DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm")));
 
-		for (Vez vez : vezovi) 
+		for (Vez vez : getVezovi()) 
 			try {
 				vez.accept(VezVisitor.getInstance());
 			} catch (Exception e) {
@@ -601,11 +597,25 @@ public class StoreSingleton {
 
 
 	public List<Brod> getBrodovi() {
+		Iterator iterator = luka.createIterator();
+		List<Brod> brodovi = new ArrayList<Brod>();
+		while(iterator.hasNext())
+		{
+			Component component = (Component) iterator.next();
+			if(component instanceof Brod)
+			{
+				Brod kanal = (Brod) component;
+				brodovi.add(kanal);
+			}
+		}
+		
 		return brodovi;
 	}
 
 	public void setBrodovi(List<Brod> brodovi) {
-		this.brodovi = brodovi;
+		for (Brod brod : brodovi) {
+			luka.add(brod);
+		}
 	}
 
 	public Luka getLuka() {
@@ -626,11 +636,17 @@ public class StoreSingleton {
 	}
 
 	public List<Vez> getVezovi() {
+		List<Mol> molovi = getMolovi();
+		List<Vez> vezovi = new ArrayList<Vez>();
+
+		for (Mol mol : molovi) {
+			vezovi.addAll(mol.getVezovi());
+		}
 		return vezovi;
 	}
 
-	public void setVezovi(List<Vez> vezovi) {
-		this.vezovi = vezovi;
+	public void setTempVezovi(List<Vez> vezovi) {
+		this.tempVezovi = vezovi;
 	}
 
 	public List<ZahtjevRezervacije> getZahtjeviRezervacija() {
@@ -650,19 +666,59 @@ public class StoreSingleton {
 	}
 
 	public List<Mol> getMolovi() {
+		Iterator iterator = luka.createIterator();
+		List<Mol> molovi = new ArrayList<Mol>();
+		while(iterator.hasNext())
+		{
+			Component component = (Component) iterator.next();
+			if(component instanceof Mol)
+			{
+				Mol mol = (Mol) component;
+				molovi.add(mol);
+			}
+		}
 		return molovi;
 	}
 
 	public void setMolovi(List<Mol> molovi) {
-		this.molovi = molovi;
+		for (Mol mol : molovi) {
+			luka.add(mol);
+		}
+	}
+
+	public void loadMolVez(List<MolVez> molVezovi)
+	{
+		for (MolVez molVez : molVezovi) {
+			try {
+				Mol mol = getMolById(molVez.getMol());
+				for (Integer idVez : molVez.getVezovi()) {
+					mol.add(getTempVezById(idVez));
+				}
+			} catch (Exception e) {
+				ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+			}
+		}
 	}
 
 	public List<Kanal> getKanali() {
+		Iterator iterator = luka.createIterator();
+		List<Kanal> kanali = new ArrayList<Kanal>();
+		while(iterator.hasNext())
+		{
+			Component component = (Component) iterator.next();
+			if(component instanceof Kanal)
+			{
+				Kanal kanal = (Kanal) component;
+				kanali.add(kanal);
+			}
+		}
 		return kanali;
 	}
 
 	public void setKanali(List<Kanal> kanali) {
-		this.kanali = kanali;
+		for (Kanal kanal : kanali) {
+			luka.add(kanal);
+		}
 	}
 
 	public List<Zapis> getDnevnik() {

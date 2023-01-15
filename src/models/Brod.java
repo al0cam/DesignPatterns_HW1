@@ -1,6 +1,7 @@
 package models;
 
-public class Brod {
+// Leaf
+public class Brod implements Component {
     private Integer id;
     private String oznakaBroda;
     private String naziv;
@@ -96,6 +97,12 @@ public class Brod {
     }
     public void setKapacitetTereta(Float kapacitetTereta) {
         this.kapacitetTereta = kapacitetTereta;
+    }
+
+    @Override
+    public void execute() {
+        // TODO Auto-generated method stub
+        
     }
 
 

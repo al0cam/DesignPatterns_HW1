@@ -94,7 +94,7 @@ public class Main {
 				return true;
 			case "-v":
 				try {
-					StoreSingleton.getInstance().setVezovi(csvReaderFactory.readFromCSV(fileName));
+					StoreSingleton.getInstance().setTempVezovi(csvReaderFactory.readFromCSV(fileName));
 					vezLoaded = true;
 					if(molLoaded && molVezFile != null)
 						findFile("-mv", molVezFile);
@@ -112,7 +112,7 @@ public class Main {
 				return true;
 			case "-m":
 				try {
-					StoreSingleton.getInstance().molovi = csvReaderFactory.readFromCSV(fileName);
+					StoreSingleton.getInstance().setMolovi(csvReaderFactory.readFromCSV(fileName));
 					molLoaded = true;
 					if(vezLoaded && molVezFile != null)
 						findFile("-mv", molVezFile);
@@ -123,7 +123,7 @@ public class Main {
 				return true;
 			case "-k":
 				try {
-					StoreSingleton.getInstance().kanali = csvReaderFactory.readFromCSV(fileName);
+					StoreSingleton.getInstance().setKanali(csvReaderFactory.readFromCSV(fileName)); 
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
