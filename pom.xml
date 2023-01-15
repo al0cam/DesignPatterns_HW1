@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>bsikac_zadaca_1</groupId>
-  <artifactId>bsikac_zadaca_1</artifactId>
+  <groupId>bsikac_zadaca_3</groupId>
+  <artifactId>bsikac_zadaca_3</artifactId>
   <version>1.0.0</version>
-  <name>bsikac_zadaca_1</name>
+  <name>bsikac_zadaca_3</name>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>

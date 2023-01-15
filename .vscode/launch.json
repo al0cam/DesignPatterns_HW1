@@ -4,17 +4,17 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "type": "java",
-            "name": "Launch Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
+        // {
+        //     "type": "java",
+        //     "name": "Launch Current File",
+        //     "request": "launch",
+        //     "mainClass": "${file}"
+        // },
         {
             "type": "java",
             "name": "Launch Main",
             "request": "launch",
-            "args": "-l DZ_2_luka.csv -v DZ_2_vez.csv -r DZ_2_raspored.csv -b DZ_2_brod.csv -k DZ_2_kanal.csv -mv DZ_2_mol_vez.csv -m DZ_2_mol.csv",
+            "args": "-l DZ_3_luka.csv -v DZ_3_vez.csv -r DZ_3_raspored.csv -b DZ_3_brod.csv -k DZ_3_kanal.csv -mv DZ_3_mol_vez.csv -m DZ_3_mol.csv",
             "mainClass": "bsikac_zadaca_1/main.Main",
             "projectName": "bsikac_zadaca_1"
         }

@@ -13,7 +13,6 @@ import Tablica.TablicaState;
 import csvReader.CSVReaderFactory;
 import models.Rezervacija;
 import models.Vez;
-import models.Zapis;
 import store.StoreSingleton;
 import virtualTime.VirtualTimeSingleton;
 
@@ -43,6 +42,8 @@ public class CLISingleton {
             "(T(?<option1> [ZPRB]{1,2})?(?<option2> [ZPRB]{1,2})?(?<option3> [ZPRB]{1,2})?$)|"+
             "(ZA (?<datumVrijmeZA>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. [0-2]\\d\\:[0-5][0-9])$)|"+
             "(C (?<idBrodC>\\d+)$)|"+
+            "(SPS \"(?<SPSNaziv>[a-zA-Z0-9\\s:]+)\"$)|"+
+            "(VPS \"(?<VPSNaziv>[a-zA-Z0-9\s:]+)\"$)|"+
             "(Q$))"
             );
 
@@ -121,6 +122,16 @@ public class CLISingleton {
 
             case "C":{
                 crtajBrod(Integer.parseInt(command.group("idBrodC")));
+            }
+            break;
+
+            case "SPS":{
+                spremiStanje(command.group("SPSNaziv"));
+            }
+            break;
+
+            case "VPS":{
+                vratiStanje(command.group("VPSNaziv"));
             }
             break;
 
@@ -231,5 +242,14 @@ public class CLISingleton {
         StoreSingleton.getInstance().crtajBrod(idBrod);
     }
 
+    private void spremiStanje(String naziv)
+    {
+        StoreSingleton.getInstance().spremiStanje(naziv);
+    }
+
+    private void vratiStanje(String naziv)
+    {
+        StoreSingleton.getInstance().vratiStanje(naziv);
+    }
 
 }

@@ -36,8 +36,11 @@ public class StoreSingleton {
     public List<Kanal> kanali;
     public List<ZahtjevRezervacije> zahtjeviRezervacija = new ArrayList<>();
     public List<Rezervacija> rezervacije = new ArrayList<>();
-	// TODO: ubacit svaku akciju u dnevnik
+
 	public List<Zapis> dnevnik = new ArrayList<>();
+	
+	public Map<String, List<Zapis>> spremnik = new HashMap<>();
+
 
 	private StoreSingleton(){}
 
@@ -581,6 +584,20 @@ public class StoreSingleton {
 		}
 
 	}
+
+	public void spremiStanje(String naziv)
+	{
+		spremnik.put(naziv, dnevnik);
+	}
+
+	public void vratiStanje(String naziv)
+	{
+		if(spremnik.containsKey(naziv))
+			dnevnik = spremnik.get(naziv);
+		else
+			ErrorCatcherSingleton.getInstance().catchCustomError("Ne postoji stanje sa nazivom: "+naziv);
+	}
+
 
 	public List<Brod> getBrodovi() {
 		return brodovi;
