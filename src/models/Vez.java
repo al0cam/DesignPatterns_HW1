@@ -1,10 +1,9 @@
 package models;
 
-import java.util.Map;
-
 import Visitor.VezVisitor;
 
-public class Vez {
+// Leaf
+public class Vez implements Component{
     private Integer id;
     private String oznaka;
     private String vrsta;
@@ -81,6 +80,12 @@ public class Vez {
     }
     public void setMaksimalnaDubina(Float maksimalnaDubina) {
         this.maksimalnaDubina = maksimalnaDubina;
+    }
+
+    @Override
+    public void execute() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

@@ -29,7 +29,8 @@ public class StoreSingleton {
 	private static StoreSingleton store;
 
     public List<Brod> brodovi;
-    public List<Luka> luke;
+    // public List<Luka> luke;
+	public Luka luka;
     public List<Raspored> rasporedi;
     public List<Vez> vezovi;
     public List<Mol> molovi;
@@ -38,7 +39,7 @@ public class StoreSingleton {
     public List<Rezervacija> rezervacije = new ArrayList<>();
 
 	public List<Zapis> dnevnik = new ArrayList<>();
-	
+
 	public Map<String, List<Zapis>> spremnik = new HashMap<>();
 
 
@@ -607,13 +608,13 @@ public class StoreSingleton {
 		this.brodovi = brodovi;
 	}
 
-	public List<Luka> getLuke() {
-		return luke;
+	public Luka getLuka() {
+		return luka;
 	}
 
-	public void setLuke(List<Luka> luke) {
-		this.luke = luke;
-		VirtualTimeSingleton.getInstance().setVirtualtime(luke.get(0).getVirtualnoVrijeme());
+	public void setLuka(List<Luka> luke) {
+		this.luka = luke.get(0);
+		VirtualTimeSingleton.getInstance().setVirtualtime(luka.getVirtualnoVrijeme());
 	}
 
 	public List<Raspored> getRasporedi() {

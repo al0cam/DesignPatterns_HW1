@@ -1,9 +1,15 @@
 package models;
 
-public class Kanal {
+// Leaf
+public class Kanal implements Component{
     private Integer id;
     private Integer frekvencija;
     private Integer maksimalanBroj;
+
+    @Override
+    public void execute() {
+        // TODO Auto-generated method stub
+    }
 
     public Kanal(Integer id, Integer frekvencija, Integer maksimalanBroj) {
         this.id = id;

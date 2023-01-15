@@ -1,8 +1,10 @@
 package models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
-public class Luka {
+// Composite 
+public class Luka extends ComponentAndIterator implements Component {
     private String naziv;
     private Float gpsSirina;
     private Float gpsVisina;
@@ -11,6 +13,7 @@ public class Luka {
     private Integer ukBrPoslovnihVezova;
     private Integer ukBrOstalihhVezova;
     private LocalDateTime virtualnoVrijeme;
+
 
     public Luka(String naziv, Float gpsSirina, Float gpsVisina, Float dubinaLuke, Integer ukBrPutnickihVezova,
             Integer ukBrPoslovnihVezova, Integer ukBrOstalihhVezova, LocalDateTime virtualnoVrijeme) {
@@ -22,7 +25,18 @@ public class Luka {
         this.ukBrPoslovnihVezova = ukBrPoslovnihVezova;
         this.ukBrOstalihhVezova = ukBrOstalihhVezova;
         this.virtualnoVrijeme = virtualnoVrijeme;
+        this.children = new ArrayList<>();
     }
+
+    @Override
+    public void execute()
+    {
+        for(Component component : children)
+        {
+            component.execute();
+        }
+    }
+
     public String getNaziv() {
         return naziv;
     }

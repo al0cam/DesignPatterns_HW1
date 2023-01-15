@@ -49,7 +49,7 @@ public class VezFile extends FileType {
         else throw new Exception("Vez vrsta is false");
 
 
-        Luka luka = StoreSingleton.getInstance().getLuke().get(0);
+        Luka luka = StoreSingleton.getInstance().getLuka();
         if(luka.getDubinaLuke() < v.getMaksimalnaDubina())
             throw new Exception("Vez dubina: "+v.getMaksimalnaDubina()+"  is bigger than Luka dubina:"+luka.getDubinaLuke());
             

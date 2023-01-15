@@ -3,11 +3,19 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mol {
+public class Mol extends ComponentAndIterator implements Component{
     private Integer id;
     private String naziv;
     private List<Vez> vezovi;
-    
+
+    @Override
+    public void execute()
+    {
+        for(Component component : children)
+        {
+            component.execute();
+        }
+    }
     
     public Mol(Integer id, String naziv, List<Vez> vezovi) {
         this.id = id;
@@ -42,6 +50,4 @@ public class Mol {
             vezovi = new ArrayList<>();
         vezovi.add(vez);
     }
-
-    
 }

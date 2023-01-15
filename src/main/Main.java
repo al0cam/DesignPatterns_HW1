@@ -78,7 +78,7 @@ public class Main {
 		switch (arg) {
 			case "-l":
 				try {
-					StoreSingleton.getInstance().setLuke(csvReaderFactory.readFromCSV(fileName));
+					StoreSingleton.getInstance().setLuka(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
 					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
 					return false;
