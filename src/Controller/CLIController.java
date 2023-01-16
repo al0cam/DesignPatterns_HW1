@@ -1,4 +1,4 @@
-package CLI;
+package Controller;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,16 +16,17 @@ import models.Vez;
 import store.StoreSingleton;
 import virtualTime.VirtualTimeSingleton;
 
-public class CLISingleton {
-    private static CLISingleton cliSingleton;
+// Singleton
+public class CLIController {
+    private static CLIController cliSingleton;
 
-	private CLISingleton(){}
+	private CLIController(){}
 
-	public static CLISingleton getInstance()
+	public static CLIController getInstance()
 	{
 		if (cliSingleton == null)
 		{
-			cliSingleton = new CLISingleton();
+			cliSingleton = new CLIController();
 		}
 		return cliSingleton;
 	}

@@ -3,7 +3,7 @@ package main;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import CLI.CLISingleton;
+import Controller.CLIController;
 import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;
 import store.StoreSingleton;
@@ -18,13 +18,24 @@ public class Main {
 	private static String molFile = null;
 	private static String rasporediFile = null;
 	private static String kanaliFile = null;
+	private static Integer brojLinija = null;
+	private static String podjela = null;
+	private static String omjer = null;
+
 
 	public static void main(String[] args) {
-		Pattern pattern = Pattern.compile(
-			"((?<arg1>-[lbrkmv]{1,2}) (?<file1>\\w+\\.csv) ?)((?<arg2>-[lbrkmv]{1,2}) (?<file2>\\w+\\.csv) ?)((?<arg3>-[lbrkmv]{1,2}) (?<file3>\\w+\\.csv) ?)((?<arg4>-[lbrkmv]{1,2}) (?<file4>\\w+\\.csv) ?)((?<arg5>-[lbrkmv]{1,2}) (?<file5>\\w+\\.csv) ?)((?<arg6>-[lbrkmv]{1,2}) (?<file6>\\w+\\.csv) ?)((?<arg7>-[lbrkmv]{1,2}) (?<file7>\\w+\\.csv) ?)?"
-			);
+		String patternPart = "((?<arg1>-[lbrkmvtpd]{1,2}) ((?<omjerNum>\\d{2}:\\d{2})|(?<podjelaNum>[RP]:[RP])|(?<fileNum>\\w+\\.csv)|(?<brojLinijaNum>\\d{2})) ?)";
+		String patternList ="";
+		for(int i = 0; i < 9; i++)
+		{
+			patternList += patternPart.replace("Num", i+"");
+		}
+		patternList+=patternPart.replace("Num", "10")+"?";
+		System.out.println(patternList);
+
+		Pattern pattern = Pattern.compile(patternList);
 		String joinedArgs = String.join(" ",args);
-		if(args.length < 12)
+		if(args.length < 18)
 		{
 			ErrorCatcherSingleton.getInstance().catchCustomError("ERROR not enough arguments provided");
 			return;
@@ -35,6 +46,9 @@ public class Main {
 			!joinedArgs.contains("-v") ||
 			!joinedArgs.contains("-k") ||
 			!joinedArgs.contains("-m") ||
+			!joinedArgs.contains("-br") ||
+			!joinedArgs.contains("-vt") ||
+			!joinedArgs.contains("-pd") ||
 			!joinedArgs.contains("-mv")
 		)
 		{
@@ -44,80 +58,80 @@ public class Main {
 
 		Matcher matcher = pattern.matcher(joinedArgs);
 
-		if(matcher.matches() && args.length == 12)
+		if(matcher.matches() && args.length == 18)
 		{
-			setFileName(matcher.group("arg1"),matcher.group("file1"));
-			setFileName(matcher.group("arg2"),matcher.group("file2"));
-			setFileName(matcher.group("arg3"),matcher.group("file3"));
-			setFileName(matcher.group("arg4"),matcher.group("file4"));
-			setFileName(matcher.group("arg5"),matcher.group("file5"));
-			setFileName(matcher.group("arg6"),matcher.group("file6"));
-
+			setSettings(matcher,args.length);
 			if(
 				findFile("-l",lukaFile) &&
 				findFile("-b",brodoviFile) &&
 				findFile("-m",molFile) &&
-				findFile("-v",molFile) &&
+				findFile("-v",vezoviFile) &&
 				findFile("-mv",molVezFile) &&
 				findFile("-k",kanaliFile)
 			)
 			{
-				CLISingleton.getInstance().commandInterpreter();
+				CLIController.getInstance().commandInterpreter();
 			}
 		}
-		else if((matcher.matches() && args.length == 14))
+		else if((matcher.matches() && args.length == 20))
 		{
-			setFileName(matcher.group("arg1"),matcher.group("file1"));
-			setFileName(matcher.group("arg2"),matcher.group("file2"));
-			setFileName(matcher.group("arg3"),matcher.group("file3"));
-			setFileName(matcher.group("arg4"),matcher.group("file4"));
-			setFileName(matcher.group("arg5"),matcher.group("file5"));
-			setFileName(matcher.group("arg6"),matcher.group("file6"));
-			setFileName(matcher.group("arg7"),matcher.group("file7"));
-
+			setSettings(matcher, args.length);
 			if(
 				findFile("-l",lukaFile) &&
 				findFile("-b",brodoviFile) &&
 				findFile("-m",molFile) &&
-				findFile("-v",molFile) &&
+				findFile("-v",vezoviFile) &&
 				findFile("-mv",molVezFile) &&
 				findFile("-k",kanaliFile) &&
 				findFile("-r",rasporediFile)
 			)
 			{
-				CLISingleton.getInstance().commandInterpreter();
+				CLIController.getInstance().commandInterpreter();
 			}
 		}
 		
 		System.out.println("END");
 	}
 
-	private static void setFileName(String arg, String fileName)
+	private static void setSettings(Matcher matcher, Integer argsLength)
 	{
-		switch (arg) {
-			case "-l":
-				lukaFile = fileName;
-				break;
-			case "-b":
-				brodoviFile = fileName;
-				break;
-			case "-v":
-				vezoviFile = fileName;
-				break;
-			case "-m":
-				molFile = fileName;
-				break;
-			case "-mv":
-				molVezFile = fileName;
-				break;
-			case "-k":
-				kanaliFile = fileName;
-				break;
-			case "-r":
-				rasporediFile = fileName;
-				break;
-			default:
-				break;
+		for(int i = 0; i < argsLength; i++)
+		{
+			String arg = matcher.group("arg"+(i+1));
+			switch (arg) {
+				case "-l":
+					lukaFile = matcher.group("file"+(i+1));
+					break;
+				case "-b":
+					brodoviFile = matcher.group("file"+(i+1));
+					break;
+				case "-v":
+					vezoviFile = matcher.group("file"+(i+1));
+					break;
+				case "-m":
+					molFile = matcher.group("file"+(i+1));
+					break;
+				case "-mv":
+					molVezFile = matcher.group("file"+(i+1));
+					break;
+				case "-k":
+					kanaliFile = matcher.group("file"+(i+1));
+					break;
+				case "-r":
+					rasporediFile = matcher.group("file"+(i+1));
+					break;
+				case "-br":
+					brojLinija = Integer.parseInt(matcher.group("brojLinija"+(i+1)));
+					break;
+				case "-vt":
+					omjer = matcher.group("omjer"+(i+1));
+					break;
+				case "-pd":
+					podjela = matcher.group("podjela"+(i+1));
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

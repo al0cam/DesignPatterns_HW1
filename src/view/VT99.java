@@ -8,18 +8,6 @@ public class VT99 {
     public static final String ANSI_ESC = "\033[";
     public static final String clearScreen = ANSI_ESC + "2J";
     public static final String clearLine = ANSI_ESC + "2K";
-    public static final String cursorUpOneLine = ANSI_ESC + "1A";
-    public static final String cursorDownOneLine = ANSI_ESC + "1B";
-
-    // public static final Integer topHeightRatio = 50;
-    // public static final Integer botHeightRatio = 50;
-    // public static final Integer maxHeight = 50;
-    // public static final Integer topHeight = ((maxHeight - 2) * topHeightRatio) / (topHeightRatio + botHeightRatio);
-    // public static final Integer botHeight = ((maxHeight - 2) * botHeightRatio ) / (topHeightRatio + botHeightRatio);
-    // public static final Integer gapPosition = topHeight + 2;
-    // public static final Integer topStart = 0;
-    // public static final Integer botStart = gapPosition + 1;
-    // public static final Integer inputPosition = topHeight + 1;
 
     private List<String> topList;
     private List<String> botList;
@@ -35,7 +23,9 @@ public class VT99 {
     private Integer topListPosition;
     private Integer botListPosition;
 
-    public VT99(Integer lineNumber, Integer topRatio, Integer botRatio, String workspaces) {
+    public VT99(Integer lineNumber, String ratio, String workspaces) {
+        Integer topRatio = Integer.parseInt(ratio.split(":")[0]);
+        Integer botRatio = Integer.parseInt(ratio.split(":")[1]);
         this.topHeight = ((lineNumber - 2) * topRatio) / (topRatio + botRatio);
         this.botHeight = ((lineNumber - 2) * botRatio) / (topRatio + botRatio);
         this.topStart = 0;
