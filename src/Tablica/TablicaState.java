@@ -3,6 +3,7 @@ package Tablica;
 import java.util.List;
 
 import ErrorCatcher.ErrorCatcherSingleton;
+import view.VT99;
 
 public class TablicaState {
     private static TablicaState tablicaState;
@@ -72,33 +73,33 @@ public class TablicaState {
     {
         if(header)
         {
-            System.out.println(String.format("%130s","").replace(" ","_"));
+            VT99.getInstance().writeLine(String.format("%130s","").replace(" ","_"));
             if(headerTitle != null)
-                System.out.println("\nTablica - "+headerTitle);
+                VT99.getInstance().writeLine("\nTablica - "+headerTitle);
             else
-            System.out.println("\nTablica - Bez naslova");
-            System.out.println(String.format("%130s","").replace(" ","_"));
+            VT99.getInstance().writeLine("\nTablica - Bez naslova");
+            VT99.getInstance().writeLine(String.format("%130s","").replace(" ","_"));
             if(ordinalNumbers)
-                System.out.println(String.format("%1$5s |", "rb")+columns);
+                VT99.getInstance().writeLine(String.format("%1$5s |", "rb")+columns);
             else 
-                System.out.println(columns);
+                VT99.getInstance().writeLine(columns);
         }
         if(ordinalNumbers)
         {
             Integer index = 1;
             for (String string : content) {
-                System.out.println(String.format("%1$5s |", index++)+string);
+                VT99.getInstance().writeLine(String.format("%1$5s |", index++)+string);
             }
         }
         else
             for (String string : content) 
-                System.out.println(string);
+                VT99.getInstance().writeLine(string);
             
         if(footer)
         {
-            System.out.println(String.format("%130s","").replace(" ","_"));
-            System.out.println("\nTotal: "+content.size());
-            System.out.println(String.format("%130s","").replace(" ","_"));
+            VT99.getInstance().writeLine(String.format("%130s","").replace(" ","_"));
+            VT99.getInstance().writeLine("\nTotal: "+content.size());
+            VT99.getInstance().writeLine(String.format("%130s","").replace(" ","_"));
         }
     }
     

@@ -3,7 +3,6 @@ package main;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Controller.CLIController;
 import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;
 import store.StoreSingleton;
@@ -37,7 +36,7 @@ public class Main {
 		String joinedArgs = String.join(" ",args);
 		if(args.length < 18)
 		{
-			ErrorCatcherSingleton.getInstance().catchCustomError("ERROR not enough arguments provided");
+			ErrorCatcherSingleton.getInstance().catchNonVTError(new Exception("ERROR not enough arguments provided"));
 			return;
 		}
 		else if(
@@ -52,7 +51,7 @@ public class Main {
 			!joinedArgs.contains("-mv")
 		)
 		{
-			ErrorCatcherSingleton.getInstance().catchCustomError("ERROR missing mandatory arguments");
+			ErrorCatcherSingleton.getInstance().catchNonVTError(new Exception("ERROR missing mandatory arguments"));
 			return;
 		}
 
@@ -71,6 +70,7 @@ public class Main {
 			)
 			{
 				VT99.setInstance(brojLinija, omjer, podjela);
+
 				VT99.getInstance().getUserInput();
 				// CLIController.getInstance().commandInterpreter();
 			}
@@ -89,6 +89,7 @@ public class Main {
 			)
 			{
 				VT99.setInstance(brojLinija, omjer, podjela);
+
 				VT99.getInstance().getUserInput();
 				// CLIController.getInstance().commandInterpreter();
 			}
@@ -148,7 +149,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().setLuka(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchNonVTError(e);
 					return false;
 				}
 				return true;
@@ -156,7 +157,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().setBrodovi(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchNonVTError(e);
 					return false;
 				}
 				return true;
@@ -164,7 +165,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().setTempVezovi(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchNonVTError(e);
 					return false;
 				}
 				return true;
@@ -172,14 +173,14 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().rasporedi = csvReaderFactory.readFromCSV(fileName);
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchNonVTError(e);
 				}
 				return true;
 			case "-m":
 				try {
 					StoreSingleton.getInstance().setMolovi(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchNonVTError(e);
 					return false;
 				}
 				return true;
@@ -187,7 +188,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().setKanali(csvReaderFactory.readFromCSV(fileName)); 
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchNonVTError(e);
 					return false;
 				}
 				return true;
@@ -195,7 +196,7 @@ public class Main {
 				try {
 					StoreSingleton.getInstance().loadMolVez(csvReaderFactory.readFromCSV(fileName));
 				} catch (Exception e) {
-					ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+					ErrorCatcherSingleton.getInstance().catchNonVTError(e);
 					return false;
 				}
 				return true;

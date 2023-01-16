@@ -14,6 +14,7 @@ import csvReader.CSVReaderFactory;
 import models.Rezervacija;
 import models.Vez;
 import store.StoreSingleton;
+import view.VT99;
 import virtualTime.VirtualTimeSingleton;
 
 // Singleton
@@ -88,11 +89,10 @@ public class CLIController {
             "(Q$))"
         );
 
-            System.out.println("\nVirtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString() +" Day: "+VirtualTimeSingleton.getInstance().getVirtualtime().getDayOfWeek());
+            VT99.getInstance().writeLine("\nVirtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString() +" Day: "+VirtualTimeSingleton.getInstance().getVirtualtime().getDayOfWeek());
             Matcher matcher = pattern.matcher(command);
             if (matcher.matches()) {
                 VirtualTimeSingleton.getInstance().passTime();
-                System.out.println();
                 executeCommand(matcher);
             }
             else {
@@ -205,7 +205,7 @@ public class CLIController {
         VirtualTimeSingleton.getInstance().setVirtualtime(
             LocalDateTime.parse(vrijemeIDatum, DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss"))
         );
-        System.out.println("Virtual time set; new virtual time: "+ VirtualTimeSingleton.getInstance().virtualTimeToString());
+        VT99.getInstance().writeLine("Virtual time set; new virtual time: "+ VirtualTimeSingleton.getInstance().virtualTimeToString());
     }
 
     private void ucitajDatoteku(String naziv)
@@ -218,9 +218,9 @@ public class CLIController {
             ErrorCatcherSingleton.getInstance().catchGeneralError(e);
         }
 
-        System.out.println("Ucitani zapisi");
+        VT99.getInstance().writeLine("Ucitani zapisi");
         for (Rezervacija rezervacija : StoreSingleton.getInstance().getRezervacije()) {
-            System.out.println("Brod: "+rezervacija.getBrod().getId() +" Vez:" + rezervacija.getVez().getId() +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeOd()) +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeDo()));
+            VT99.getInstance().writeLine("Brod: "+rezervacija.getBrod().getId() +" Vez:" + rezervacija.getVez().getId() +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeOd()) +" " + StoreSingleton.getInstance().timeToString(rezervacija.getDatumVrijemeDo()));
         }
     }
 

@@ -25,6 +25,7 @@ import models.Rezervacija;
 import models.Vez;
 import models.ZahtjevRezervacije;
 import models.Zapis;
+import view.VT99;
 import virtualTime.VirtualTimeSingleton;
 
 public class StoreSingleton {
@@ -238,7 +239,7 @@ public class StoreSingleton {
 			List<Vez> slobodniVezovi = pronadjiSlobodneVezove(zahtjevRezervacije.getDatumVrijemeOd());
 			if(slobodniVezovi.size() == 0)
 			{
-				System.out.println("Nema slobodnih vezova u trazeno vrijeme");
+				VT99.getInstance().writeLine("Nema slobodnih vezova u trazeno vrijeme");
 			}
 			else
 			{
@@ -260,7 +261,7 @@ public class StoreSingleton {
 				}
 				
 				if(najboljiVez == null)
-					System.out.println("Brod ne odgovara niti jednom slobodnom vezu");
+					VT99.getInstance().writeLine("Brod ne odgovara niti jednom slobodnom vezu");
 				else 
 					return new Rezervacija(
 						brod, najboljiVez, 
@@ -292,7 +293,7 @@ public class StoreSingleton {
 			brod = getBrodById(idBrod);
 			if(!isBrodNaAnyKanalu(brod, VirtualTimeSingleton.getInstance().getVirtualtime()))
 			{
-				System.out.println("Brod nije ni na jednom kanalu");
+				VT99.getInstance().writeLine("Brod nije ni na jednom kanalu");
 				return;
 			}
 			Rezervacija rezervacija = pretvoriZahtjevURezervaciju(
@@ -305,7 +306,7 @@ public class StoreSingleton {
 			if(rezervacija != null)
 			{
 				rezervacije.add(rezervacija);
-				System.out.println("Kreiran je zahtjev za brod: "+rezervacija.getBrod().getId()+ " za vez: "+rezervacija.getVez().getId()+ " od: "+timeToString(rezervacija.getDatumVrijemeOd()) + " do: "+timeToString(rezervacija.getDatumVrijemeDo()));
+				VT99.getInstance().writeLine("Kreiran je zahtjev za brod: "+rezervacija.getBrod().getId()+ " za vez: "+rezervacija.getVez().getId()+ " od: "+timeToString(rezervacija.getDatumVrijemeOd()) + " do: "+timeToString(rezervacija.getDatumVrijemeDo()));
 				zapis.setPrihvacenPrivez(true);
 				zapis.setRezervacija(rezervacija);
 				dnevnik.add(zapis);
@@ -317,7 +318,7 @@ public class StoreSingleton {
 			}
 			else
 			{
-				System.out.println("Nije kreiran zahtjev za brod: "+idBrod);
+				VT99.getInstance().writeLine("Nije kreiran zahtjev za brod: "+idBrod);
 				zapis.setPrihvacenPrivez(false);
 				dnevnik.add(zapis);
 				obavijestiPrisutneBrodove(
@@ -337,7 +338,7 @@ public class StoreSingleton {
 			Brod brod = getBrodById(idBrod);
 			if(!isBrodNaAnyKanalu(brod, VirtualTimeSingleton.getInstance().getVirtualtime()))
 			{
-				System.out.println("Brod nije ni na jednom kanalu");
+				VT99.getInstance().writeLine("Brod nije ni na jednom kanalu");
 				return;
 			}
 			Kanal kanal = dohvatiKanalNaKojemJeBrod(brod, VirtualTimeSingleton.getInstance().getVirtualtime());
@@ -345,7 +346,7 @@ public class StoreSingleton {
 			for (Raspored raspored : rasporedi) {
 				if(raspored.getBrod().equals(brod) && zauzetoURasporedu(raspored.getVez(), VirtualTimeSingleton.getInstance().getVirtualtime(), raspored))
 				{
-					System.out.println("Brod: "+ brod.getId()+" privezan za vez: "+raspored.getVez().getId());
+					VT99.getInstance().writeLine("Brod: "+ brod.getId()+" privezan za vez: "+raspored.getVez().getId());
 					zapis.setPrihvacenPrivez(true);
 					zapis.setRezervacija(
 						new Rezervacija(
@@ -368,7 +369,7 @@ public class StoreSingleton {
 				if(rezervacija.getBrod().equals(brod) &&
 					isTimeBetween(rezervacija.getDatumVrijemeOd(), rezervacija.getDatumVrijemeDo(), VirtualTimeSingleton.getInstance().getVirtualtime()) 
 				){
-					System.out.println("Brod: "+ brod.getId()+" privezan za vez: "+rezervacija.getVez().getId());
+					VT99.getInstance().writeLine("Brod: "+ brod.getId()+" privezan za vez: "+rezervacija.getVez().getId());
 					zapis.setPrihvacenPrivez(true);
 					zapis.setRezervacija(rezervacija);
 					dnevnik.add(zapis);
@@ -382,7 +383,7 @@ public class StoreSingleton {
 			}
 			zapis.setPrihvacenPrivez(false);
 			dnevnik.add(zapis);
-			System.out.println("Brod: "+ idBrod+" nema rezervaciju");
+			VT99.getInstance().writeLine("Brod: "+ idBrod+" nema rezervaciju");
 			obavijestiPrisutneBrodove(
 				kanal,
 				VirtualTimeSingleton.getInstance().getVirtualtime(),
@@ -493,7 +494,7 @@ public class StoreSingleton {
 	{
 		for (Brod brod : getBrodovi()) {
 			if(isBrodNaKanalu(brod, kanal, time))
-				System.out.println("Brod: "+brod.getId()+" je dobio obavijest \n  | Obavijest: "+message);
+				VT99.getInstance().writeLine("Brod: "+brod.getId()+" je dobio obavijest \n  | Obavijest: "+message);
 		}
 	}
 
@@ -526,7 +527,7 @@ public class StoreSingleton {
 					setVrsta("prijava").
 					build();
 				message = "Brodu: "+idBrod+" je odbijeno spajanje na kanal frekvencije: "+frekvencija;
-				System.out.println("Kanal sa frekvencijom: "+frekvencija+" je pun");
+				VT99.getInstance().writeLine("Kanal sa frekvencijom: "+frekvencija+" je pun");
 			}
 
 			dnevnik.add(zapis);
@@ -695,7 +696,7 @@ public class StoreSingleton {
 					mol.add(getTempVezById(idVez));
 				}
 			} catch (Exception e) {
-				ErrorCatcherSingleton.getInstance().catchGeneralError(e);
+				ErrorCatcherSingleton.getInstance().catchNonVTError(e);
 			}
 		}
 	}

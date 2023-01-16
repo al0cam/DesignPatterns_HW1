@@ -25,7 +25,7 @@ public class MolVezFile extends FileType {
                     listOfObjects.add(MolVez);
                
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
+                ErrorCatcherSingleton.getInstance().catchNonVTError(e);;
             }
         }
         list = listOfObjects;

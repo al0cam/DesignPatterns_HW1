@@ -1,6 +1,7 @@
 package Vrsta;
 
 import models.Brod;
+import view.VT99;
 
 public class PutnickiBrod extends VrstaHandler {
     private static VrstaHandler instance;
@@ -21,8 +22,8 @@ public class PutnickiBrod extends VrstaHandler {
     public void handle(Brod brod) {
         if(brod.getVrsta().equals("KL"))
         {
-            System.out.println("Brod: " + brod.getId() +" je Putnicki Brod!");
-            System.out.println(
+            VT99.getInstance().writeLine("Brod: " + brod.getId() +" je Putnicki Brod!");
+            VT99.getInstance().writeLine(
                 """
                            ________________________  
                     ______/  /___/  /___/  /___/  |

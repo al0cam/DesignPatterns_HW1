@@ -2,6 +2,7 @@ package Vrsta;
 
 import ErrorCatcher.ErrorCatcherSingleton;
 import models.Brod;
+import view.VT99;
 
 public class RonilackiBrod extends VrstaHandler {
     private static VrstaHandler instance;
@@ -21,8 +22,8 @@ public class RonilackiBrod extends VrstaHandler {
     public void handle(Brod brod) {
         if(brod.getVrsta().equals("RO"))
         {
-            System.out.println("Brod: " + brod.getId() +" je Ronilacki Brod!");
-            System.out.println(
+            VT99.getInstance().writeLine("Brod: " + brod.getId() +" je Ronilacki Brod!");
+            VT99.getInstance().writeLine(
                 """
                            
                 _|________P

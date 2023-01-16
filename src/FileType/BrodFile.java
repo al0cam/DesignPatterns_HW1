@@ -32,7 +32,7 @@ public class BrodFile extends FileType {
                     listOfObjects.add(b);
 
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError("Brod", line,e);
+                ErrorCatcherSingleton.getInstance().catchNonVTError(e);
             }
         }
         list = listOfObjects;

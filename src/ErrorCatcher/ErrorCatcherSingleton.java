@@ -2,6 +2,8 @@ package ErrorCatcher;
 
 import java.util.Arrays;
 
+import view.VT99;
+
 public class ErrorCatcherSingleton {
 	private static ErrorCatcherSingleton errorCatcher;
 	private Integer errorCount = 0;
@@ -20,20 +22,28 @@ public class ErrorCatcherSingleton {
 	public void catchLineError(String fileName, String[] line, Exception e)
 	{
 		errorCount++;
-		System.out.println("\nError count: " + errorCount+"\n  | File: "+fileName + "\n  | Line: "+Arrays.toString(line)+"\n  | Cause: "+e.getMessage()+"\n");
+		VT99.getInstance().writeError("\nError count: " + errorCount+"\n  | File: "+fileName + "\n  | Line: "+Arrays.toString(line)+"\n  | Cause: "+e.getMessage()+"\n");
 	}
 
 	public void catchCustomError( String error)
 	{
 		errorCount++;
-		System.out.println("\nError count: " + errorCount + "\n  | Cause: "+error+"\n");
+		VT99.getInstance().writeError("\nError count: " + errorCount + "\n  | Cause: "+error+"\n");
 	}
 
 	public void catchGeneralError(Exception e)
 	{
 		errorCount++;
-		System.out.println("\nError count: " + errorCount +"\n  | Cause: "+e.getMessage()+"\n");
+		VT99.getInstance().writeError("\nError count: " + errorCount +"\n  | Cause: "+e.getMessage()+"\n");
 	}
+
+	public void catchNonVTError(Exception e)
+	{
+		errorCount++;
+		System.out.println("\nError count: " + errorCount +"\n  | Cause: "+e.getMessage()+"\n");
+		// System.out.println("\nError count: " + errorCount +"\n  | Cause: "+e.getMessage()+"\n | Stack trace: "+Arrays.toString(e.getStackTrace())+"\n");
+	}
+
 
 	public Integer getErrorCount()
 	{

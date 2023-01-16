@@ -3,9 +3,30 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 
+import Controller.CLIController;
+
 public class VT99 {
     private static VT99 vt99;
 
+    // ANSI COMMANDS
+    public static final String ANSI_ESC = "\033[";
+    public static final String clearScreen = ANSI_ESC + "2J";
+    public static final String clearLine = ANSI_ESC + "2K";
+
+    private List<String> topList;
+    private List<String> botList;
+
+    private Integer topHeight;
+    private Integer botHeight;
+    private Integer gapPosition;
+    private Integer topStart;
+    private Integer botStart;
+    private Integer inputPosition;
+    private boolean errorsTop;
+
+    private Integer topListPosition;
+    private Integer botListPosition;
+    
 	private VT99(){}
     public VT99(Integer lineNumber, String ratio, String workspaces) {
         Integer topRatio = Integer.parseInt(ratio.split(":")[0]);
@@ -45,27 +66,6 @@ public class VT99 {
     }
 
 
-    // ANSI COMMANDS
-    public static final String ANSI_ESC = "\033[";
-    public static final String clearScreen = ANSI_ESC + "2J";
-    public static final String clearLine = ANSI_ESC + "2K";
-
-    private List<String> topList;
-    private List<String> botList;
-
-    private Integer topHeight;
-    private Integer botHeight;
-    private Integer gapPosition;
-    private Integer topStart;
-    private Integer botStart;
-    private Integer inputPosition;
-    private boolean errorsTop;
-
-    private Integer topListPosition;
-    private Integer botListPosition;
-
-    
-
     public void getUserInput()
     {
         while(true)
@@ -92,8 +92,10 @@ public class VT99 {
                         scrollToEnd(split[1]);
                 }
             }
-            else if (string.equals("exit"))
+            else if (string.equals("Q"))
                 break;
+            else
+                CLIController.getInstance().interpretCommand(string);
         }
     }
 

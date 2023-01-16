@@ -20,7 +20,7 @@ public class MolFile extends FileType {
                 listOfObjects.add(b);
                
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
+                ErrorCatcherSingleton.getInstance().catchNonVTError(e);;
             }
         }
         list = listOfObjects;

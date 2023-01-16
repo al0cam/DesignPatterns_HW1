@@ -22,7 +22,7 @@ public class KanalFile extends FileType {
                     listOfObjects.add(kanal);
                
             } catch (Exception e) {
-                ErrorCatcherSingleton.getInstance().catchLineError(path,line,e);
+                ErrorCatcherSingleton.getInstance().catchNonVTError(e);
             }
         }
         list = listOfObjects;
