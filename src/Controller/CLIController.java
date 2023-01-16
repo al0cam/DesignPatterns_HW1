@@ -45,8 +45,9 @@ public class CLIController {
             "(C (?<idBrodC>\\d+)$)|"+
             "(SPS \"(?<SPSNaziv>[a-zA-Z0-9\\s:]+)\"$)|"+
             "(VPS \"(?<VPSNaziv>[a-zA-Z0-9\s:]+)\"$)|"+
+            "(S \"(?<scroll>[a-zA-Z0-9\s]+)\"$)|"+
             "(Q$))"
-            );
+        );
 
         boolean work = true;
         while(work)
@@ -66,6 +67,38 @@ public class CLIController {
                 ErrorCatcherSingleton.getInstance().catchCustomError("ERROR parametri su krivo uneseni");
             }
         }
+    }
+
+    public void interpretCommand(String command)
+    {
+        Pattern pattern = Pattern.compile(
+            "(?<bigGroup>(I$)|"+
+            "(VR (?<datumIVrijeme>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
+            "(V (?<vrstaVeza>[A-Z]{2}) (?<status>[A-Z]) (?<datumVrijemeOd>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9]) (?<datumVrijemeDo>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. \\d\\d\\:[0-5][0-9]\\:[0-6][0-9])$)|"+
+            "(UR (?<nazivDatoteke>\\w+\\.csv)$)|"+
+            "(ZD (?<idBrodZD>\\d+)$)|"+
+            "(ZP (?<idBrodZP>\\d+) (?<trajanjeUSatima>\\d+)$)|"+
+            "(F (?<idBrodF>\\d+) (?<kanal>\\d+)(?<izlaz> Q)?$)|"+
+            "(T(?<option1> [ZPRB]{1,2})?(?<option2> [ZPRB]{1,2})?(?<option3> [ZPRB]{1,2})?$)|"+
+            "(ZA (?<datumVrijmeZA>[0-3]\\d\\.[0-1][0-9]\\.\\d{4}. [0-2]\\d\\:[0-5][0-9])$)|"+
+            "(C (?<idBrodC>\\d+)$)|"+
+            "(SPS \"(?<SPSNaziv>[a-zA-Z0-9\\s:]+)\"$)|"+
+            "(VPS \"(?<VPSNaziv>[a-zA-Z0-9\s:]+)\"$)|"+
+            "(S \"(?<scroll>[a-zA-Z0-9\s]+)\"$)|"+
+            "(Q$))"
+        );
+
+            System.out.println("\nVirtual time: " + VirtualTimeSingleton.getInstance().virtualTimeToString() +" Day: "+VirtualTimeSingleton.getInstance().getVirtualtime().getDayOfWeek());
+            Matcher matcher = pattern.matcher(command);
+            if (matcher.matches()) {
+                VirtualTimeSingleton.getInstance().passTime();
+                System.out.println();
+                executeCommand(matcher);
+            }
+            else {
+                ErrorCatcherSingleton.getInstance().catchCustomError("ERROR parametri su krivo uneseni");
+            }
+        
     }
 
     private boolean executeCommand(Matcher command)

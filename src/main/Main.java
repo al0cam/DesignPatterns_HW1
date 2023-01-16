@@ -7,6 +7,7 @@ import Controller.CLIController;
 import ErrorCatcher.ErrorCatcherSingleton;
 import csvReader.CSVReaderFactory;
 import store.StoreSingleton;
+import view.VT99;
 
 public class Main {
 	static boolean molLoaded = false;
@@ -24,14 +25,13 @@ public class Main {
 
 
 	public static void main(String[] args) {
-		String patternPart = "((?<arg1>-[lbrkmvtpd]{1,2}) ((?<omjerNum>\\d{2}:\\d{2})|(?<podjelaNum>[RP]:[RP])|(?<fileNum>\\w+\\.csv)|(?<brojLinijaNum>\\d{2})) ?)";
+		String patternPart = "((?<argNum>-[lbrkmvtpd]{1,2}) ((?<omjerNum>\\d{2}:\\d{2})|(?<podjelaNum>[RP]:[RP])|(?<fileNum>\\w+\\.csv)|(?<brojLinijaNum>\\d{2})) ?)";
 		String patternList ="";
-		for(int i = 0; i < 9; i++)
+		for(int i = 1; i <= 9; i++)
 		{
 			patternList += patternPart.replace("Num", i+"");
 		}
 		patternList+=patternPart.replace("Num", "10")+"?";
-		System.out.println(patternList);
 
 		Pattern pattern = Pattern.compile(patternList);
 		String joinedArgs = String.join(" ",args);
@@ -70,7 +70,9 @@ public class Main {
 				findFile("-k",kanaliFile)
 			)
 			{
-				CLIController.getInstance().commandInterpreter();
+				VT99.setInstance(brojLinija, omjer, podjela);
+				VT99.getInstance().getUserInput();
+				// CLIController.getInstance().commandInterpreter();
 			}
 		}
 		else if((matcher.matches() && args.length == 20))
@@ -86,7 +88,9 @@ public class Main {
 				findFile("-r",rasporediFile)
 			)
 			{
-				CLIController.getInstance().commandInterpreter();
+				VT99.setInstance(brojLinija, omjer, podjela);
+				VT99.getInstance().getUserInput();
+				// CLIController.getInstance().commandInterpreter();
 			}
 		}
 		
@@ -95,39 +99,39 @@ public class Main {
 
 	private static void setSettings(Matcher matcher, Integer argsLength)
 	{
-		for(int i = 0; i < argsLength; i++)
+		for(int i = 1; i <= argsLength/2; i++)
 		{
-			String arg = matcher.group("arg"+(i+1));
+			String arg = matcher.group("arg"+(i));
 			switch (arg) {
 				case "-l":
-					lukaFile = matcher.group("file"+(i+1));
+					lukaFile = matcher.group("file"+(i));
 					break;
 				case "-b":
-					brodoviFile = matcher.group("file"+(i+1));
+					brodoviFile = matcher.group("file"+(i));
 					break;
 				case "-v":
-					vezoviFile = matcher.group("file"+(i+1));
+					vezoviFile = matcher.group("file"+(i));
 					break;
 				case "-m":
-					molFile = matcher.group("file"+(i+1));
+					molFile = matcher.group("file"+(i));
 					break;
 				case "-mv":
-					molVezFile = matcher.group("file"+(i+1));
+					molVezFile = matcher.group("file"+(i));
 					break;
 				case "-k":
-					kanaliFile = matcher.group("file"+(i+1));
+					kanaliFile = matcher.group("file"+(i));
 					break;
 				case "-r":
-					rasporediFile = matcher.group("file"+(i+1));
+					rasporediFile = matcher.group("file"+(i));
 					break;
 				case "-br":
-					brojLinija = Integer.parseInt(matcher.group("brojLinija"+(i+1)));
+					brojLinija = Integer.parseInt(matcher.group("brojLinija"+(i)));
 					break;
 				case "-vt":
-					omjer = matcher.group("omjer"+(i+1));
+					omjer = matcher.group("omjer"+(i));
 					break;
 				case "-pd":
-					podjela = matcher.group("podjela"+(i+1));
+					podjela = matcher.group("podjela"+(i));
 					break;
 				default:
 					break;

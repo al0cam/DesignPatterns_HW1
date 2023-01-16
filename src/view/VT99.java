@@ -4,25 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VT99 {
-    // ANSI COMMANDS
-    public static final String ANSI_ESC = "\033[";
-    public static final String clearScreen = ANSI_ESC + "2J";
-    public static final String clearLine = ANSI_ESC + "2K";
+    private static VT99 vt99;
 
-    private List<String> topList;
-    private List<String> botList;
-
-    private Integer topHeight;
-    private Integer botHeight;
-    private Integer gapPosition;
-    private Integer topStart;
-    private Integer botStart;
-    private Integer inputPosition;
-    private boolean errorsTop;
-
-    private Integer topListPosition;
-    private Integer botListPosition;
-
+	private VT99(){}
     public VT99(Integer lineNumber, String ratio, String workspaces) {
         Integer topRatio = Integer.parseInt(ratio.split(":")[0]);
         Integer botRatio = Integer.parseInt(ratio.split(":")[1]);
@@ -51,40 +35,38 @@ public class VT99 {
         printInterface();
     }
 
-    public void writeError(String error)
+    public static void setInstance(Integer lineNumber, String ratio, String workspaces)
     {
-        if(errorsTop)
-            addTop(error);
-        else
-            addBot(error);
+        vt99 = new VT99(lineNumber, ratio, workspaces);
     }
-
-    public void writeLine(String line)
+    public static VT99 getInstance()
     {
-        if(errorsTop)
-            addBot(line);
-        else
-            addTop(line);
+        return vt99;
     }
 
 
-    public static void main(String args[]) {
-        System.out.println(clearScreen);
-        VT99 vt99 = new VT99(50, 50, 50, "R:P");
+    // ANSI COMMANDS
+    public static final String ANSI_ESC = "\033[";
+    public static final String clearScreen = ANSI_ESC + "2J";
+    public static final String clearLine = ANSI_ESC + "2K";
 
-        for(int i = 0; i < vt99.topHeight; i++)
-            vt99.addTop(""+i);
-        for(int i = 0; i < vt99.botHeight; i++)
-            vt99.addBot(""+i);
+    private List<String> topList;
+    private List<String> botList;
 
-        // wait for user input
+    private Integer topHeight;
+    private Integer botHeight;
+    private Integer gapPosition;
+    private Integer topStart;
+    private Integer botStart;
+    private Integer inputPosition;
+    private boolean errorsTop;
 
-        vt99.getUserInput();
+    private Integer topListPosition;
+    private Integer botListPosition;
 
+    
 
-    }
-
-    void getUserInput()
+    public void getUserInput()
     {
         while(true)
         {
@@ -92,18 +74,7 @@ public class VT99 {
             System.out.println(clearLine);
             postaviNaUnos();
             String string = System.console().readLine();
-            if(string.contains("add"))
-            {
-                String[] split = string.split(" ");
-                if(split.length == 3)
-                {
-                    if(split[1].equals("top"))
-                        addTop(split[2]);
-                    else if(split[1].equals("bot"))
-                        addBot(split[2]);
-                }
-            }
-            else if(string.contains("scroll"))
+            if(string.contains("scroll"))
             {
                 String[] split = string.split(" ");
                 if(split.length == 4)
@@ -124,6 +95,22 @@ public class VT99 {
             else if (string.equals("exit"))
                 break;
         }
+    }
+
+    public void writeError(String error)
+    {
+        if(errorsTop)
+            addTop(error);
+        else
+            addBot(error);
+    }
+
+    public void writeLine(String line)
+    {
+        if(errorsTop)
+            addBot(line);
+        else
+            addTop(line);
     }
 
     void postavi(int x, int y) {
@@ -266,7 +253,4 @@ public class VT99 {
             botListPosition = botHeight;
         printInterface();
     }
-
 }
-
-

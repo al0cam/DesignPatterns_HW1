@@ -14,7 +14,7 @@
             "type": "java",
             "name": "Launch Main",
             "request": "launch",
-            "args": "-l DZ_3_luka.csv -v DZ_3_vez.csv -r DZ_3_raspored.csv -b DZ_3_brod.csv -k DZ_3_kanal.csv -mv DZ_3_mol_vez.csv -m DZ_3_mol.csv",
+            "args": "-l DZ_3_luka.csv -v DZ_3_vez.csv -r DZ_3_raspored.csv -b DZ_3_brod.csv -k DZ_3_kanal.csv -mv DZ_3_mol_vez.csv -m DZ_3_mol.csv -br 50 -vt 50:50 -pd R:P",
             "mainClass": "bsikac_zadaca_1/main.Main",
             "projectName": "bsikac_zadaca_1"
         }
